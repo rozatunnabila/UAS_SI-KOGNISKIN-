@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KogniSkin - Skincare Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --cream: #FFF9F0; --sage: #7C9A7E; --terracotta: #D47B5A;
+    --charcoal: #2C2C2A; --muted: #8B8B87; --border: #F0E8DD;
+    --white: #FFFFFF; --gold: #D4AF37; --light-gold: #F3E5AB;
+    --dark-brown: #3E2723; --warm-brown: #5D4037; --soft-brown: #8D6E63;
+    --light-sage: #EEF3EE; --danger: #E24B4A;
+}
+body { font-family: 'Poppins', sans-serif; background: var(--cream); color: var(--charcoal); min-height: 100vh; }
+.page { display: none; animation: fadeIn 0.4s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.btn-primary { background: var(--charcoal); color: var(--cream); border: none; padding: 12px 28px; border-radius: 40px; font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; }
+.btn-primary:hover { background: #3d3d3a; transform: translateY(-2px); }
+.btn-outline { background: transparent; border: 1.5px solid var(--charcoal); color: var(--charcoal); padding: 12px 28px; border-radius: 40px; font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.3s; }
+.btn-outline:hover { background: var(--charcoal); color: var(--cream); }
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 5%;
+    background: var(--warm-brown);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+
+
+
+.logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--cream); }
+.logo span { color: var(--gold); font-style: italic; }
+.nav-links { display: flex; gap: 0.4rem; background: rgba(255,255,240,0.15); padding: 0.25rem; border-radius: 60px; border: 1px solid rgba(255,255,255,0.2); }
+.nav-links a { text-decoration: none; color: var(--cream); font-size: 0.85rem; font-weight: 500; cursor: pointer; padding: 0.5rem 1.2rem; border-radius: 50px; transition: all 0.3s; }
+.nav-links a:hover, .nav-links a.active { background: var(--cream); color: var(--dark-brown); }
+.right-nav { display: flex; align-items: center; gap: 0.6rem; }
+.skin-badge { background: var(--dark-brown); color: var(--cream); padding: 8px 18px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); }
+.skin-badge:hover { background: var(--cream); color: var(--dark-brown); transform: scale(1.02); }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--dark-brown); display: flex; align-items: center; justify-content: center; color: var(--cream); font-weight: 600; cursor: pointer; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.2); }
+.avatar:hover { transform: scale(1.05); background: var(--cream); color: var(--dark-brown); }
+
+/* HERO DASHBOARD */
+.hero { position: relative; min-height: 55vh; display: flex; align-items: center; justify-content: flex-start; padding: 0 5%; overflow: hidden; }
+.hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(255,255,240,0.5) 0%, rgba(255,255,240,0.2) 60%, rgba(255,255,240,0) 100%); z-index: 1; }
+.hero-content { position: relative; z-index: 2; max-width: 650px; text-align: left; }
+.hero-content h1 { font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 700; margin-bottom: 1.5rem; line-height: 1.2; color: var(--dark-brown); text-shadow: 1px 1px 2px rgba(255,255,255,0.5); }
+.hero-stats { display: flex; gap: 2rem; margin-top: 1.5rem; }
+.stat-number { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--dark-brown); }
+.stat-label { font-size: 0.7rem; opacity: 0.8; color: var(--dark-brown); }
+
+/* HORIZONTAL SCROLL */
+.horizontal-scroll-section { padding: 2rem 5% 3rem; background: var(--white); overflow-x: auto; overflow-y: visible; white-space: nowrap; scroll-behavior: smooth; cursor: grab; position: relative; }
+.horizontal-scroll-section::-webkit-scrollbar { height: 6px; }
+.horizontal-scroll-section::-webkit-scrollbar-track { background: var(--border); border-radius: 10px; }
+.horizontal-scroll-section::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+.scroll-container { display: inline-flex; gap: 2rem; padding: 2rem 0.5rem; white-space: normal; }
+.blog-card-horizontal { width: 320px; background: var(--cream); border-radius: 48px 48px 48px 20px; overflow: hidden; cursor: pointer; transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); box-shadow: 0 15px 35px rgba(0,0,0,0.15); border: 1px solid rgba(212,175,55,0.2); position: relative; display: inline-block; vertical-align: top; white-space: normal; }
+.blog-card-horizontal:nth-child(odd) { transform: translateY(-15px); }
+.blog-card-horizontal:nth-child(even) { transform: translateY(10px); }
+.blog-card-horizontal:hover { transform: translateY(-25px) scale(1.02) !important; box-shadow: 0 30px 50px rgba(0,0,0,0.25); border-color: var(--gold); }
+.blog-image-horizontal { height: 170px; background: linear-gradient(135deg, var(--sage), var(--terracotta)); display: flex; align-items: center; justify-content: center; font-size: 2.8rem; color: white; }
+.blog-content-horizontal { padding: 1.2rem; background: var(--cream); }
+.blog-category-horizontal { font-size: 0.65rem; color: var(--terracotta); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-weight: 600; }
+.blog-title-horizontal { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--dark-brown); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.blog-excerpt-horizontal { font-size: 0.75rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.8rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.blog-link-horizontal { color: var(--gold); font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; transition: gap 0.3s; }
+.blog-card-horizontal:hover .blog-link-horizontal { gap: 0.8rem; color: var(--terracotta); }
+
+/* Daily Habits */
+.habits-section { background: var(--light-sage); padding: 3rem 5%; }
+.habits-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; max-width: 1200px; margin: 0 auto; }
+.habit-card { background: var(--white); border-radius: 20px; padding: 1.2rem; text-align: center; transition: all 0.3s; }
+.habit-card:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+.habit-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+.habit-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; }
+.habit-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+.section-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--charcoal); }
+.section-subtitle { text-align: center; color: var(--muted); margin-bottom: 1rem; font-size: 0.85rem; }
+
+/* ===== PRODUCT CARD - UPDATED DENGAN GAMBAR ===== */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.product-card { background: white; border-radius: 20px; overflow: hidden; cursor: pointer; transition: all 0.3s; border: 1px solid var(--border); }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+
+/* Area gambar produk - bisa tampilkan img atau emoji */
+.product-image {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--cream), #F5EDE3);
+    overflow: hidden;
+    position: relative;
+}
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.product-card:hover .product-image img { transform: scale(1.07); }
+.product-image .emoji-icon {
+    font-size: 4rem;
+    transition: transform 0.3s;
+}
+.product-card:hover .emoji-icon { transform: scale(1.1); }
+
+.product-info { padding: 1rem; text-align: center; }
+.product-category { font-size: 0.65rem; color: var(--sage); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.product-name { font-weight: 700; font-size: 0.9rem; margin: 0.4rem 0; color: var(--dark-brown); line-height: 1.3; }
+.product-price { color: var(--terracotta); font-weight: 700; font-size: 0.9rem; }
+.product-rating { color: var(--gold); font-size: 0.75rem; margin: 0.3rem 0; }
+.match-badge { background: var(--light-sage); color: var(--sage); padding: 3px 10px; border-radius: 20px; font-size: 0.65rem; display: inline-block; font-weight: 600; }
+
+.filter-bar { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+.filter-btn { padding: 0.5rem 1.2rem; border-radius: 40px; border: 1px solid var(--border); background: white; cursor: pointer; transition: all 0.3s; font-family: 'Poppins', sans-serif; font-size: 0.8rem; }
+.filter-btn.active, .filter-btn:hover { background: var(--charcoal); color: white; border-color: var(--charcoal); }
+
+/* ===== REVIEW CARD - UPDATED DENGAN GAMBAR ===== */
+.review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.review-card { background: white; border-radius: 20px; padding: 1.4rem; border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; }
+.review-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.07); }
+.review-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; }
+.review-avatar { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
+.review-stars { color: var(--gold); margin: 0.3rem 0; font-size: 0.85rem; letter-spacing: 2px; }
+.review-text { color: var(--charcoal); font-size: 0.82rem; line-height: 1.6; margin: 0.5rem 0; font-style: italic; }
+.review-product-label { font-size: 0.7rem; color: var(--muted); margin-top: 0.5rem; }
+
+/* REVIEW PHOTO - container gambar di review */
+.review-photo-wrapper {
+    margin-top: 1rem;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    cursor: pointer;
+    position: relative;
+}
+.review-photo-wrapper img {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+.review-photo-wrapper:hover img { transform: scale(1.03); }
+.review-photo-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.4));
+    color: white;
+    font-size: 0.65rem;
+    padding: 8px 10px 6px;
+    text-align: center;
+}
+
+/* Photo Upload Styles */
+.photo-upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    padding: 1.2rem;
+    text-align: center;
+    background: var(--cream);
+    transition: all 0.25s;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+.photo-upload-area:hover { border-color: var(--gold); background: #FFF6E8; }
+.photo-upload-icon { font-size: 2rem; color: var(--gold); margin-bottom: 0.4rem; }
+.photo-upload-text { font-size: 0.78rem; color: var(--muted); }
+.photo-upload-text span { color: var(--terracotta); font-weight: 600; }
+
+/* Preview foto sebelum submit */
+.photo-preview-container { margin-top: 0.8rem; display: flex; align-items: center; gap: 0.8rem; }
+.photo-preview-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid var(--gold);
+    flex-shrink: 0;
+}
+.photo-preview-info { flex: 1; }
+.photo-preview-name { font-size: 0.75rem; font-weight: 600; color: var(--dark-brown); margin-bottom: 0.3rem; }
+.photo-preview-size { font-size: 0.7rem; color: var(--muted); }
+.remove-photo-btn {
+    background: var(--danger);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+.remove-photo-btn:hover { transform: scale(1.1); }
+
+/* Modal lightbox untuk foto */
+.lightbox-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); display: none; align-items: center;
+    justify-content: center; z-index: 2000; padding: 1rem;
+}
+.lightbox-overlay.open { display: flex; }
+.lightbox-img { max-width: 90vw; max-height: 90vh; border-radius: 16px; object-fit: contain; }
+.lightbox-close { position: absolute; top: 1rem; right: 1rem; background: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+/* AUTH */
+.auth-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--cream), #F5EDE3); padding: 2rem; }
+.auth-card { background: white; border-radius: 30px; padding: 2rem; max-width: 450px; width: 100%; }
+.auth-card .logo { text-align: center; margin-bottom: 2rem; font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--warm-brown); }
+.auth-card .logo span { color: var(--gold); }
+.auth-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 1.8rem; }
+.auth-sub { text-align: center; color: var(--muted); margin-bottom: 2rem; font-size: 0.85rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; letter-spacing: 0.5px; font-weight: 600; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 12px; font-family: 'Poppins', sans-serif; background: var(--cream); font-size: 0.85rem; }
+.form-group textarea { resize: vertical; }
+.auth-switch { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; }
+.auth-switch a { color: var(--terracotta); cursor: pointer; font-weight: 600; }
+
+/* MODALS */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 30px; padding: 2rem; max-width: 550px; width: 100%; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--dark-brown); }
+.modal-close { background: var(--cream); border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.modal-close:hover { background: var(--border); }
+.quiz-progress { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+.progress-step { flex: 1; height: 4px; background: var(--border); border-radius: 2px; transition: background 0.3s; }
+.progress-step.active { background: var(--terracotta); }
+.progress-step.done { background: var(--sage); }
+.quiz-option { width: 100%; padding: 1rem; border: 1px solid var(--border); border-radius: 12px; background: white; text-align: left; cursor: pointer; margin-bottom: 0.5rem; font-family: 'Poppins', sans-serif; transition: all 0.2s; }
+.quiz-option:hover { border-color: var(--terracotta); background: #FFF8F5; }
+.quiz-option.selected { border-color: var(--terracotta); background: #FFF5F0; }
+.problem-tag { display: inline-block; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 50px; margin: 0.3rem; cursor: pointer; background: white; font-size: 0.8rem; transition: all 0.2s; }
+.problem-tag.selected { background: var(--charcoal); color: white; border-color: var(--charcoal); }
+.toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--charcoal); color: white; padding: 0.8rem 1.5rem; border-radius: 50px; display: none; z-index: 1100; font-size: 0.85rem; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+.footer { background: var(--charcoal); color: white; padding: 2rem 5% 1rem; margin-top: 2rem; }
+.footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.footer-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.8rem; }
+.footer-logo span { color: var(--terracotta); }
+.footer-links h4 { margin-bottom: 0.8rem; font-size: 0.9rem; }
+.footer-links a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.75rem; margin-bottom: 0.4rem; cursor: pointer; transition: color 0.2s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-bottom { text-align: center; padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; opacity: 0.6; }
+
+/* STAR SELECTOR */
+#star-selector span { cursor: pointer; transition: transform 0.1s; color: var(--gold); font-size: 1.8rem; }
+#star-selector span:hover { transform: scale(1.2); }
+
+@media (max-width: 768px) {
+    .hero-content h1 { font-size: 2rem; }
+    .hero-stats { gap: 1rem; }
+    .nav-links { gap: 0.3rem; }
+    .nav-links a { padding: 0.4rem 0.8rem; font-size: 0.7rem; }
+    .right-nav { gap: 0.5rem; }
+    .skin-badge { padding: 5px 12px; font-size: 0.6rem; }
+    .avatar { width: 35px; height: 35px; font-size: 0.8rem; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+}
+
+/* ========== LANDING PAGE CSS ========== */
+:root {
+    --shadow-sm: 0 10px 30px rgba(0,0,0,0.08);
+    --shadow-md: 0 20px 40px rgba(0,0,0,0.12);
+    --shadow-lg: 0 30px 60px rgba(0,0,0,0.15);
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --gold-light: #E3C779;
+}
+.landing-wrapper { position: relative; overflow: hidden; min-height: 100vh; background: linear-gradient(135deg, var(--cream) 0%, #F5EDE3 100%); }
+.landing-slider { display: flex; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+.landing-slider .hero-landing { 
+    min-width: 100%; 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    min-height: 100vh; 
+    align-items: center; 
+    gap: 4rem; 
+    padding: 0 8%; 
+    position: relative; 
+    overflow: hidden; 
+    background: transparent; 
+}.landing-slider .hero-content { display: flex; flex-direction: column; justify-content: center; opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s ease forwards; }
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+.landing-slider .hero-content h1 { font-family: 'Playfair Display', serif; font-size: 3.8rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--dark-brown); line-height: 1.2; letter-spacing: -0.02em; }
+.landing-slider .hero-content h1 span { color: var(--gold); position: relative; display: inline-block; }
+.landing-slider .hero-content h1 span::after { content: ''; position: absolute; bottom: 8px; left: 0; width: 100%; height: 8px; background: rgba(198,164,63,0.2); border-radius: 4px; z-index: -1; }
+.landing-slider .hero-content p { color: var(--soft-brown); font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem; max-width: 500px; opacity: 0.9; }
+.hero-buttons { display: flex; gap: 1rem; margin-top: 0.5rem; }
+.landing-slider .hero-image { display: flex; align-items: center; justify-content: center; position: relative; opacity: 0; transform: scale(0.95); animation: fadeInScale 0.8s ease 0.2s forwards; }
+@keyframes fadeInScale { to { opacity: 1; transform: scale(1); } }
+.landing-slider .hero-image img { width: 75%; max-width: 450px; border-radius: 40px; object-fit: cover; box-shadow: var(--shadow-lg); transition: var(--transition-smooth); }
+.landing-slider .hero-image img:hover { transform: scale(1.02); box-shadow: 0 40px 80px rgba(0,0,0,0.2); }
+.floating-card-landing { position: absolute; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 0.9rem 1.5rem; border-radius: 60px; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; font-weight: 500; color: var(--dark-brown); white-space: nowrap; animation: float 3s ease-in-out infinite; z-index: 5; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.landing-dots { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 10; }
+.landing-dots .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(44,24,16,0.2); cursor: pointer; transition: var(--transition-smooth); }
+.landing-dots .dot:hover { background: var(--gold); }
+.landing-dots .dot.active { background: var(--gold); width: 28px; border-radius: 10px; }
+@media (max-width: 768px) {
+    .landing-slider .hero-landing { grid-template-columns: 1fr; text-align: center; padding: 6rem 5% 4rem; gap: 2rem; }
+    .landing-slider .hero-content { align-items: center; }
+    .landing-slider .hero-content p { margin: 0 auto 1.5rem; }
+    .landing-slider .hero-content h1 { font-size: 2.5rem; }
+    .floating-card-landing { display: none; }
+}
+
+/* landing btn override */
+.landing-wrapper .btn-primary { background: var(--gold); color: white; }
+.landing-wrapper .btn-primary:hover { background: var(--gold-light); }
+
+
+
+/* ===== RESULT MODAL OVERRIDE ===== */
+#result-modal .modal {
+    max-width: 720px;
+    border-radius: 28px;
+    padding: 0;
+    overflow: hidden;
+    background: #F5EDE3;
+}
+ 
+/* ===== HERO CARD ===== */
+.ks-skin-hero {
+    background: linear-gradient(135deg, #6B3A2A 0%, #C4895A 60%, #E8C99A 100%);
+    padding: 2rem 2rem 1.8rem;
+    position: relative;
+    overflow: hidden;
+}
+.ks-skin-hero::before {
+    content: '';
+    position: absolute;
+    top: -40%; right: -8%;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    pointer-events: none;
+}
+.ks-skin-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30%; left: -5%;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    pointer-events: none;
+}
+.ks-hero-close-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+}
+.ks-hero-label {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,240,0.7);
+    font-family: 'Poppins', sans-serif;
+}
+.ks-hero-close {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #FFF8F0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+.ks-hero-close:hover { background: rgba(255,255,255,0.35); }
+.ks-hero-skin-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    color: #FFF8F0;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    margin-bottom: 0.7rem;
+    position: relative; z-index: 2;
+}
+.ks-hero-badges {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    margin-bottom: 1rem;
+    position: relative; z-index: 2;
+}
+.ks-hero-badge {
+    background: rgba(255,255,255,0.2);
+    color: #FFF8F0;
+    padding: 4px 13px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.3);
+    font-family: 'Poppins', sans-serif;
+}
+.ks-hero-desc {
+    font-size: 0.8rem;
+    color: rgba(255,248,240,0.88);
+    line-height: 1.7;
+    font-family: 'Poppins', sans-serif;
+    position: relative; z-index: 2;
+    max-width: 540px;
+}
+ 
+/* ===== BODY AREA ===== */
+.ks-result-body {
+    padding: 1.6rem 1.8rem;
+    overflow-y: auto;
+    max-height: 62vh;
+}
+ 
+/* ===== SECTION LABEL ===== */
+.ks-section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #6B3A2A;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.9rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'Poppins', sans-serif;
+}
+.ks-section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, #C4895A44, transparent);
+}
+ 
+/* ===== KARAKTERISTIK GRID ===== */
+.ks-chars-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+.ks-char-card {
+    background: #FFFAF5;
+    border: 1px solid #E8D5C0;
+    border-radius: 18px;
+    padding: 0.9rem 1rem;
+    box-shadow:
+        0 4px 14px rgba(150,90,50,0.1),
+        0 1px 3px rgba(0,0,0,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.7);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.ks-char-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(150,90,50,0.18);
+}
+.ks-char-icon {
+    width: 34px; height: 34px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #F5D8C0, #E8BF9A);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    margin-bottom: 0.6rem;
+    box-shadow: 0 3px 8px rgba(150,80,30,0.2);
+}
+.ks-char-title {
+    font-size: 0.78rem; font-weight: 600;
+    color: #4A2410; margin-bottom: 0.25rem;
+    font-family: 'Poppins', sans-serif;
+}
+.ks-char-desc {
+    font-size: 0.7rem; color: #8D6040;
+    line-height: 1.55;
+    font-family: 'Poppins', sans-serif;
+}
+ 
+/* ===== INGREDIENTS 2-COL ===== */
+.ks-ing-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+.ks-ing-card {
+    border-radius: 20px;
+    padding: 1.1rem;
+    box-shadow:
+        0 6px 20px rgba(0,0,0,0.08),
+        0 2px 5px rgba(0,0,0,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.ks-ing-card.good {
+    background: linear-gradient(160deg, #F8F5EE, #FDF8F1);
+    border: 1px solid #D4B896;
+}
+.ks-ing-card.avoid {
+    background: linear-gradient(160deg, #FDF3EE, #FEF6F2);
+    border: 1px solid #E8C0A8;
+}
+.ks-ing-header {
+    display: flex; align-items: center; gap: 0.55rem;
+    margin-bottom: 0.6rem; padding-bottom: 0.65rem;
+    border-bottom: 1px solid rgba(180,120,70,0.15);
+}
+.ks-ing-header-icon {
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+}
+.good .ks-ing-header-icon {
+    background: linear-gradient(135deg, #C8E6C4, #A8D5A2);
+    box-shadow: 0 2px 6px rgba(60,130,50,0.22);
+}
+.avoid .ks-ing-header-icon {
+    background: linear-gradient(135deg, #F5C9B0, #EFA88A);
+    box-shadow: 0 2px 6px rgba(200,80,40,0.18);
+}
+.ks-ing-header-title {
+    font-size: 0.78rem; font-weight: 600; color: #3E2410;
+    font-family: 'Poppins', sans-serif;
+}
+.ks-ing-header-sub {
+    font-size: 0.65rem; color: #8D6E63;
+    font-family: 'Poppins', sans-serif;
+}
+.ks-ing-item {
+    display: flex; align-items: flex-start; gap: 0.55rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid rgba(180,120,70,0.07);
+}
+.ks-ing-item:last-child { border-bottom: none; }
+.ks-ing-dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; flex-shrink: 0; margin-top: 1px;
+    font-weight: 700;
+}
+.good .ks-ing-dot { background: #D4EDCF; color: #2E7D32; }
+.avoid .ks-ing-dot { background: #FAD5C5; color: #BF360C; }
+.ks-ing-name {
+    font-size: 0.75rem; font-weight: 600;
+    color: #3E2410; line-height: 1.3; margin-bottom: 2px;
+    font-family: 'Poppins', sans-serif;
+}
+.ks-ing-why {
+    font-size: 0.67rem; color: #8D6E63;
+    line-height: 1.45;
+    font-family: 'Poppins', sans-serif;
+}
+ 
+/* ===== TIPS CARD ===== */
+.ks-tips-card {
+    background: linear-gradient(135deg, #FBF3E8, #F7EAD6);
+    border: 1px solid #D4B896;
+    border-radius: 20px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1.4rem;
+    box-shadow:
+        0 6px 18px rgba(150,90,40,0.1),
+        0 1px 4px rgba(0,0,0,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.ks-tips-list { display: flex; flex-direction: column; gap: 0.65rem; }
+.ks-tip-item { display: flex; align-items: flex-start; gap: 0.75rem; }
+.ks-tip-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C4895A, #A0622E);
+    color: #FFF8F0;
+    font-size: 0.65rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(150,80,30,0.3);
+    font-family: 'Poppins', sans-serif;
+}
+.ks-tip-text {
+    font-size: 0.75rem; color: #5D3A1A;
+    line-height: 1.6; padding-top: 2px;
+    font-family: 'Poppins', sans-serif;
+}
+ 
+/* ===== CTA ROW ===== */
+.ks-cta-row {
+    display: flex; gap: 0.8rem; flex-wrap: wrap;
+    padding: 0 1.8rem 1.8rem;
+}
+.ks-cta-btn {
+    flex: 1;
+    padding: 0.85rem 1.2rem;
+    border-radius: 50px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: none;
+    text-align: center;
+}
+.ks-cta-btn.primary {
+    background: linear-gradient(135deg, #6B3A2A, #C4895A);
+    color: #FFF8F0;
+    box-shadow: 0 6px 18px rgba(100,50,20,0.35);
+}
+.ks-cta-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(100,50,20,0.45);
+}
+.ks-cta-btn.outline {
+    background: transparent;
+    color: #6B3A2A;
+    border: 1.5px solid #C4895A;
+}
+.ks-cta-btn.outline:hover {
+    background: #F5EDE3;
+    transform: translateY(-2px);
+}
+.ks-note {
+    font-size: 0.68rem; color: #A08060;
+    text-align: center; padding-bottom: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+ 
+@media (max-width: 600px) {
+    .ks-chars-grid { grid-template-columns: 1fr; }
+    .ks-ing-wrapper { grid-template-columns: 1fr; }
+    .ks-hero-skin-name { font-size: 1.6rem; }
+    #result-modal .modal { border-radius: 20px; }
+    .ks-result-body { padding: 1.2rem 1.2rem; }
+    .ks-cta-row { padding: 0 1.2rem 1.4rem; }
+}
+
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 120%;
+    left: 0;
+
+    background: rgba(255,255,240,0.15); /* sama kayak navbar */
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px; /* biar nggak kotak */
+    padding: 0.4rem;
+
+    min-width: 180px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    z-index: 999;
+}
+
+.nav-dropdown-menu.open {
+    display: block;
+}
+
+.nav-dropdown-item {
+    font-family: inherit; /* INI KUNCI */
+    font-size: 0.85rem;
+    font-weight: 500;
+
+    color: inherit;
+
+    padding: 0.5rem 0.8rem;
+    border-radius: 999px;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.nav-dropdown-item:hover {
+    background: rgba(255,255,255,0.18); /* sama vibe navbar */
+    backdrop-filter: blur(6px);
+
+    transform: translateX(2px); /* efek halus */
+}
+
+.nav-dropdown-item {
+    color: rgba(255,255,255,0.9);
+}
+
+.nav-dropdown-item:hover {
+    color: white;
+}
+.nav-dropdown-menu {
+    font-family: inherit;
+}
+
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-dropdown > .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.nav-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.nav-dropdown .nav-link {
+    cursor: pointer;
+}
+
+/* dropdown wrapper */
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* tombol utama dropdown (biar sama kayak nav-link lain) */
+.nav-dropdown-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+}
+
+/* dropdown menu */
+.nav-dropdown-menu {
+    position: absolute;
+    top: 120%;
+    left: 0;
+
+    min-width: 180px;
+    padding: 0.4rem;
+
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+
+    display: none;
+    z-index: 999;
+}
+
+/* tampilkan dropdown */
+.nav-dropdown-menu.show {
+    display: block;
+}
+
+/* item dropdown */
+.nav-dropdown-item {
+    padding: 0.6rem 0.8rem;
+    border-radius: 10px;
+
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--dark-brown);
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+/* hover biar sama feel navbar */
+.nav-dropdown-item:hover {
+    background: rgba(196, 120, 90, 0.12);
+    color: var(--warm-brown);
+}
+
+.nav-dropdown-btn {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+
+    background: transparent;
+    border: none;
+    padding: 0;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+
+    transition: 0.2s ease;
+}
+
+/* hover sama kayak nav-link */
+.nav-dropdown-btn:hover {
+    color: var(--warm-brown);
+    opacity: 0.9;
+}
+
+/* biar tetap konsisten kalau aktif (optional kalau kamu mau) */
+.nav-dropdown-btn.active {
+    color: var(--warm-brown);
+}
+
+.nav-dropdown-btn.active {
+    color: var(--warm-brown);
+    position: relative;
+}
+
+#tab-analysis {
+    background: var(--warm-brown);
+    min-height: 100vh;
+}
+
+#tab-analysis .section-title,
+#tab-analysis .section-subtitle {
+    color: #ffffff;
+}
+
+#tab-analysis .section-subtitle {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+#analysis-content {
+    color: #2F2A25;
+}
+
+#tab-analysis #analysis-content .ks-hero-title {
+    color: #ffffff;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ========== LANDING PAGE ========== -->
+<div class="page active" id="page-landing">
+    <div class="landing-wrapper">
+        <div class="landing-slider" id="landingSlider">
+            <div class="hero-landing">
+                <div class="hero-content">
+                    <h1>Kenali <span>Jenis Kulitmu</span> dengan Tepat</h1>
+                    <p>Analisis berbasis AI untuk memahami kondisi kulitmu secara akurat dan personal.</p>
+            
+                </div>
+                <div class="hero-image">
+                    <img src="images/lan1.jpg" alt="Skincare">
+                    <div class="floating-card-landing" style="top:10%;left:-5%;">✨ Analisis AI Kulit</div>
+                    <div class="floating-card-landing" style="bottom:20%;right:-5%;">💎 Rekomendasi Personal</div>
+                </div>
+            </div>
+            <div class="hero-landing">
+                <div class="hero-content">
+                    <h1>Rekomendasi <span>Skincare Cerdas</span></h1>
+                    <p>Dapatkan produk terbaik berdasarkan kondisi kulit dan masalah yang kamu alami.</p>
+
+                </div>
+                <div class="hero-image">
+                    <img src="images/lan2.jpg" alt="Skincare Product">
+                    <div class="floating-card-landing" style="top:15%;left:-10%;">🧪 Berdasarkan Ingredient</div>
+                    <div class="floating-card-landing" style="bottom:25%;right:-10%;">⭐ 98% Cocok</div>
+                </div>
+            </div>
+            <div class="hero-landing">
+                <div class="hero-content">
+                    <h1>Review dari <span>Skin Twin</span> Kamu</h1>
+                    <p>Lihat pengalaman pengguna lain dengan tipe kulit yang sama denganmu.</p>
+                    <div><button class="btn-primary" onclick="goToLoginFromLanding()">Mulai Sekarang →</button></div>
+                </div>
+                <div class="hero-image">
+                    <img src="images/lan3.jpg" alt="Review">
+                    <div class="floating-card-landing" style="bottom:30%;right:-5%;">💬 4.8 Rating</div>
+                </div>
+            </div>
+        </div>
+        <div class="landing-dots" id="landingDots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== LOGIN PAGE ========== -->
+<div class="page" id="page-login">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo">Kogni<span>Skin</span></div>
+            <h2 class="auth-title">Welcome Back</h2>
+            <p class="auth-sub">Login untuk melanjutkan perjalanan skincareму</p>
+            <div class="form-group">
+                <label>Email / Username</label>
+                <input type="text" id="login-email" placeholder="Email atau username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-pass" placeholder="Password">
+            </div>
+            <button class="btn-primary" style="width:100%;background:var(--warm-brown)" onclick="doLogin()">Sign In</button>
+            <p class="auth-switch">Belum punya akun? <a onclick="showPage('page-register')">Daftar Sekarang</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- ========== REGISTER PAGE ========== -->
+<div class="page" id="page-register">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo">Kogni<span>Skin</span></div>
+            <h2 class="auth-title">Daftar KogniSkin</h2>
+            <p class="auth-sub">Mulai perjalanan skincare personalmu</p>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="reg-username" placeholder="Pilih username">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="reg-email" placeholder="Email kamu">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="reg-password" placeholder="Buat password">
+            </div>
+            <button class="btn-primary" style="width:100%;background:var(--warm-brown)" onclick="doRegister()">Buat Akun</button>
+            <p class="auth-switch">Sudah punya akun? <a onclick="showPage('page-login')">Sign In</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- ========== MAIN APP ========== -->
+<div class="page" id="page-app">
+    <nav class="navbar">
+        <div class="logo">Kogni<span>Skin</span></div>
+        <div class="nav-links">
+
+            <a class="nav-link active" onclick="showTab('dashboard',event)">
+                Dashboard
+            </a>
+
+   <a class="nav-link" onclick="showTab('analysis',event)">Analisis</a>
+
+           <!-- DROPDOWN WRAPPER (KEMBALI KE ASLI) -->
+<div class="nav-dropdown">
+    <a class="nav-link nav-dropdown-btn" onclick="toggleDropdown('rec-dropdown')">
+        Rekomendasi <span id="rec-notif-badge" style="background: #E24B4A; width: 8px; height: 8px; border-radius: 50%; display: none; margin-left: 4px; vertical-align: middle;"></span> ▾    </a>
+    <div class="nav-dropdown-menu" id="rec-dropdown">
+        <div class="nav-dropdown-item" onclick="openTabFromDropdown('products')">Rekomendasi Produk</div>
+        <div class="nav-dropdown-item" onclick="openTabFromDropdown('reviews')">Review Komunitas</div>
+    </div>
+</div>
+
+            <a class="nav-link" onclick="showTab('profile',event)">
+                Profile
+            </a>
+
+        </div>
+
+        <div class="right-nav">
+            <!-- KODE BARU -->
+            <span class="skin-badge" id="nav-skin-badge" onclick="showTab('analysis', event)">📸 Scan Wajah AI</span>
+            <div class="avatar" id="nav-avatar" onclick="showTab('profile',event)">U</div>
+        </div>
+    </nav>
+
+
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard">
+        <div class="hero">
+            <img src="images/bckkkkk.jpg" class="hero-bg" alt="Background" onerror="this.style.display='none'">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1>Kenali Kulitmu,<br>Temukan Skincare Terbaikmu</h1>
+                <div><button class="btn-primary" onclick="showTab('analysis', event)" style="background:var(--dark-brown);color:var(--cream);font-weight:700;">Mulai Analisis AI Wajah →</button></div>                <div class="hero-stats">
+                    <div class="stat-item"><div class="stat-number" id="stat-users">0</div><div class="stat-label">Users</div></div>
+                    <div class="stat-item"><div class="stat-number" id="stat-reviews">0</div><div class="stat-label">Reviews</div></div>
+                    <div class="stat-item"><div class="stat-number">12</div><div class="stat-label">Products</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="horizontal-scroll-section" id="scrollSection">
+            <div class="section-title" style="text-align:left;margin-bottom:0.5rem;">📰 Berita Skincare Terbaru</div>
+            <p class="section-subtitle" style="text-align:left;">Geser ke samping untuk membaca →</p>
+            <div class="scroll-container" id="articlesScrollContainer"></div>
+        </div>
+
+        <div class="habits-section">
+            <h2 class="section-title">✨ Daily Habits</h2>
+            <p class="section-subtitle">Kebiasaan sederhana untuk kulit sehat setiap hari</p>
+            <div class="habits-container">
+                <div class="habit-card"><div class="habit-icon">💧</div><div class="habit-title">Minum Air Cukup</div><div class="habit-desc">Konsumsi minimal 8 gelas air per hari untuk menjaga kelembapan kulit dari dalam.</div></div>
+                <div class="habit-card"><div class="habit-icon">😴</div><div class="habit-title">Tidur 7-8 Jam</div><div class="habit-desc">Tidur yang cukup membantu regenerasi sel kulit dan mengurangi kulit kusam.</div></div>
+                <div class="habit-card"><div class="habit-icon">🧴</div><div class="habit-title">Gunakan SPF Setiap Hari</div><div class="habit-desc">Lindungi kulit dari sinar UV dengan sunscreen SPF 30+ setiap hari.</div></div>
+                <div class="habit-card"><div class="habit-icon">🚫</div><div class="habit-title">Jangan Sentuh Wajah</div><div class="habit-desc">Hindari menyentuh wajah dengan tangan kotor untuk mencegah jerawat.</div></div>
+            </div>
+        </div>
+
+        <div style="background:var(--white);padding:3rem 5%">
+            <h2 class="section-title">Rekomendasi Produk</h2>
+            <p class="section-subtitle">Produk terbaik yang cocok dengan jenis kulitmu</p>
+            <div class="product-grid" id="featured-products"></div>
+        </div>
+    </div>
+
+    <!-- PRODUCTS TAB -->
+    <div id="tab-products" style="display:none">
+        <div style="padding:2rem 5%">
+            <h2 class="section-title">Semua Produk</h2>
+            <p class="section-subtitle">Filter berdasarkan kategori</p>
+            <div class="filter-bar" id="filter-bar"></div>
+            <div class="product-grid" id="all-products"></div>
+        </div>
+    </div>
+
+    <!-- ========== TAB ANALISIS + SCAN KAMERA ASLI TENSORFLOW ========== -->
+    <div id="tab-analysis" style="display:none; background: #5D4037; min-height: 100vh;">
+        <div style="padding:2rem 5%">
+            <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.5rem; color: #ffffff;">Hasil Analisis Kulit</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.75); margin-bottom: 1rem; font-size: 0.85rem;">Scan wajah menggunakan AI atau berdasarkan hasil kuis</p>
+
+            <!-- BOX SCANNER WAJAH (Gaya Terisolasi, Dijamin Aman) -->
+            <div style="max-width: 450px; margin: 0 auto 2rem; background: white; padding: 1.5rem; border-radius: 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #F0E8DD;">
+                <div style="width: 100%; max-width: 320px; height: 240px; background: #FFF9F0; margin: 0 auto 1rem; border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 2px dashed #D4AF37; position: relative;">
+                    <video id="ks-video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); display: none;"></video>
+                    <canvas id="ks-canvas" style="display: none;"></canvas>
+                    <div id="ks-camera-placeholder" style="color: #8B8B87; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center;">
+                        <i class="fas fa-camera" style="font-size: 2rem; color: #D4AF37; margin-bottom: 0.5rem;"></i>
+                        Kamera Belum Aktif
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                    <button id="btn-start-camera" onclick="aktifkanKameraAsli()" style="background: transparent; border: 1.5px solid #2C2C2A; color: #2C2C2A; padding: 8px 20px; font-size: 0.8rem; border-radius: 20px; font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer;">Aktifkan Kamera</button>
+                    <button id="btn-capture-skin" onclick="jepretDanPrediksiAI()" style="background: #5D4037; color: #FFF9F0; border: none; padding: 8px 20px; font-size: 0.8rem; border-radius: 20px; font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer; display: none;">Ambil & Analisis AI</button>
+                </div>
+            </div>
+
+            <div id="analysis-content" style="color: #2F2A25;"></div>
+        </div>
+    </div>
+
+    <!-- REVIEWS TAB -->
+    <div id="tab-reviews" style="display:none">
+        <div style="padding:2rem 5%">
+            <h2 class="section-title">Ulasan Komunitas</h2>
+            <p class="section-subtitle">Review nyata dari pengguna dengan jenis kulit yang sama</p>
+            
+            <!-- 🔥 TOMBOL SUDAH DIPINDAH KE ATAS DI SINI -->
+            <div style="text-align:center; margin-bottom: 2rem;">
+                <button class="btn-primary" style="background:var(--warm-brown); padding: 10px 28px; font-size: 0.85rem;" onclick="openReviewModal()">
+                    <i class="fas fa-pen" style="margin-right: 8px;"></i> Tulis Ulasan Kamu
+                </button>
+            </div>
+
+            <div class="filter-bar" id="review-filters">
+                <button class="filter-btn active" onclick="filterReviews('all',this)">Semua</button>
+                <button class="filter-btn" onclick="filterReviews('same-skin',this)">Kulit Sama</button>
+                <button class="filter-btn" onclick="filterReviews('top-rated',this)">Rating Tertinggi</button>
+            </div>
+            
+            <div class="review-grid" id="reviews-list"></div>
+        </div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" style="display:none">
+        <div style="padding:2rem 5%">
+            <div style="max-width:800px;margin:0 auto">
+                <div style="background:white;border-radius:30px;padding:2rem;text-align:center;margin-bottom:1.5rem">
+                    <div class="avatar" style="width:80px;height:80px;font-size:2rem;margin:0 auto 1rem;background:var(--dark-brown);color:var(--cream);" id="profile-avatar-big">U</div>
+                    <h3 id="profile-name">User</h3>
+                    <p id="profile-email" style="color:var(--muted)">email@example.com</p>
+                    <span class="skin-badge" id="profile-skin-badge" style="margin-top:0.5rem;display:inline-block;background:var(--dark-brown);color:var(--cream);">Belum dianalisis</span>
+                </div>
+                <div style="background:white;border-radius:30px;padding:1.5rem;margin-bottom:1rem">
+                    <h4 style="margin-bottom:1rem;font-family:'Playfair Display',serif;">Hasil Analisis Kulit</h4>
+                    <div style="display:flex;justify-content:space-between;padding:0.8rem 0;border-bottom:1px solid var(--border)"><span>Jenis Kulit</span><span id="profile-skin-type" style="font-weight:500">—</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.8rem 0;border-bottom:1px solid var(--border)"><span>Masalah Kulit</span><span id="profile-concerns" style="font-weight:500">—</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.8rem 0"><span>Tanggal Quiz</span><span id="profile-quiz-date" style="font-weight:500">—</span></div>
+                    <button class="btn-outline" style="width:100%; margin-top:1rem; cursor: pointer;" onclick="showTab('analysis', event)">Ikuti Scan Ulang</button>
+                </div>
+                <div style="background:white;border-radius:30px;padding:1.5rem">
+                    <h4 style="margin-bottom:1rem;font-family:'Playfair Display',serif;">Akun</h4>
+                    <div style="display:flex;justify-content:space-between;padding:0.8rem 0;border-bottom:1px solid var(--border)"><span>Username</span><span id="profile-username" style="font-weight:500">—</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.8rem 0;border-bottom:1px solid var(--border)"><span>Email</span><span id="profile-user-email" style="font-weight:500">—</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.8rem 0"><span>Bergabung Sejak</span><span id="profile-join-date" style="font-weight:500">—</span></div>
+                    <button class="btn-primary" style="width:100%;margin-top:1rem;background:var(--danger)" onclick="doLogout()">Keluar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <div class="footer-logo">Kogni<span>Skin</span></div>
+                <p style="font-size:0.75rem;opacity:0.7;">Rekomendasi skincare berbasis AI yang dipersonalisasi sesuai jenis kulit unikmu.</p>
+            </div>
+            <div class="footer-links"><h4>Menu</h4><a onclick="showTab('dashboard',null)">Dashboard</a><a onclick="showTab('analysis',null)">Analisis</a><a onclick="showTab('reviews',null)">Rekomendasi & Ulasan</a><a onclick="startQuiz()">Skin Quiz</a></div>
+            <div class="footer-links"><h4>Bantuan</h4><a>Pusat Bantuan</a><a>Hubungi Kami</a><a>Kebijakan Privasi</a></div>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2026 KogniSkin. All rights reserved.</p></div>
+    </footer>
+</div>
+
+<!-- ========== MODALS ========== -->
+<!-- ========== POPUP MODAL NOTIFICATION PANDUAN ========== -->
+<div class="modal-overlay" id="quiz-modal">
+    <div class="modal" style="max-width: 450px; padding: 2.2rem 2rem; border-radius: 30px; text-align: center;">
+        <div class="modal-header" style="margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-family:'Playfair Display'; font-size:1.4rem; color:var(--dark-brown);">✨ Panduan Analisis AI</h3>
+            <button class="modal-close" onclick="closeQuizModal()">✕</button>
+        </div>
+        <div style="font-size: 3rem; margin: 1rem 0;">💡</div>
+        <h4 style="font-family:'Poppins'; font-weight:600; font-size:1.05rem; margin-bottom: 0.5rem; color:var(--dark-brown);">Yuk, Kenali Kondisi Jenis Kulit Wajahmu!</h4>
+        <p style="color: var(--muted); font-size: 0.82rem; line-height:1.6; margin-bottom: 1.8rem;">
+            Untuk memulai, silakan lakukan pemindaian wajah secara praktis dengan menekan tombol menu <b style="color:var(--terracotta);">📸 Scan Wajah AI</b> di bar navigasi atas atau klik Menu Analisis.
+        </p>
+        <button class="btn-primary" style="width: 100%; background: var(--warm-brown); padding: 12px; border-radius: 20px;" onclick="closeQuizModal(); showTab('analysis', null);">
+            Saya Mengerti, Mulai Scan Sekarang →
+        </button>
+    </div>
+</div>
+
+<!-- Problem Modal -->
+<div class="modal-overlay" id="problem-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Masalah Kulitmu?</h3>
+            <button class="modal-close" onclick="closeProblemModal()">✕</button>
+        </div>
+        <p class="auth-sub">Pilih semua yang sesuai untuk mendapatkan rekomendasi personal</p>
+        <div id="problem-tags"></div>
+        <button class="btn-primary" style="width:100%;margin-top:1.5rem;background:var(--warm-brown)" onclick="submitSkinAnalysis()">Dapatkan Rekomendasi →</button>
+    </div>
+</div>
+
+<!-- Result Modal -->
+<div class="modal-overlay" id="result-modal">
+    <div class="modal" style="padding:0;background:#F5EDE3;max-width:720px;">
+ 
+        <!-- HERO -->
+        <div class="ks-skin-hero">
+            <div class="ks-hero-close-row">
+                <div class="ks-hero-label">✦ Hasil Analisis</div>
+                <button class="ks-hero-close" onclick="closeResultModal()">✕</button>
+            </div>
+            <div id="ks-hero-skin-name" class="ks-hero-skin-name">Jenis Kulit: —</div>
+            <div class="ks-hero-badges" id="ks-hero-badges"></div>
+            <p class="ks-hero-desc" id="ks-hero-desc">Memuat deskripsi...</p>
+        </div>
+ 
+        <!-- BODY -->
+        <div class="ks-result-body">
+ 
+            <!-- Karakteristik -->
+            <div class="ks-section-label">✦ Karakteristik utama</div>
+            <div class="ks-chars-grid" id="ks-chars-grid"></div>
+ 
+            <!-- Ingredients -->
+            <div class="ks-section-label">✦ Analisis kebutuhan ingredient</div>
+            <div class="ks-ing-wrapper">
+                <div class="ks-ing-card good">
+                    <div class="ks-ing-header">
+                        <div class="ks-ing-header-icon">✓</div>
+                        <div>
+                            <div class="ks-ing-header-title">Bahan yang Dibutuhkan</div>
+                            <div class="ks-ing-header-sub">Cocok untuk kulitmu</div>
+                        </div>
+                    </div>
+                    <div id="ks-ing-good"></div>
+                </div>
+                <div class="ks-ing-card avoid">
+                    <div class="ks-ing-header">
+                        <div class="ks-ing-header-icon">⚠</div>
+                        <div>
+                            <div class="ks-ing-header-title">Bahan yang Harus Dihindari</div>
+                            <div class="ks-ing-header-sub">Sebaiknya kamu hindari</div>
+                        </div>
+                    </div>
+                    <div id="ks-ing-avoid"></div>
+                </div>
+            </div>
+ 
+            <!-- Tips -->
+            <div class="ks-section-label">✦ Tips perawatan harian</div>
+            <div class="ks-tips-card">
+                <div class="ks-tips-list" id="ks-tips-list"></div>
+            </div>
+ 
+            <p class="ks-note">✦ Hasil analisis ini berdasarkan data kulit yang kamu masukkan</p>
+        </div>
+ 
+        <!-- CTA -->
+        <div class="ks-cta-row">
+            <button class="ks-cta-btn outline" onclick="startQuiz(); closeResultModal()">↺ Ulangi Quiz</button>
+            <button class="ks-cta-btn primary" onclick="closeResultModal()">✦ Lihat Rekomendasi Produk →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== REVIEW MODAL - DENGAN FOTO UPLOAD ===== -->
+<div class="modal-overlay" id="review-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>✍️ Tulis Ulasan</h3>
+            <button class="modal-close" onclick="closeReviewModal()">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Pilih Produk</label>
+            <select id="review-product"></select>
+        </div>
+        <div class="form-group">
+            <label>Jenis Kulitmu</label>
+            <select id="review-skin-type">
+                <option>Kulit Kering</option>
+                <option>Kulit Berminyak</option>
+                <option>Kulit Normal</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Masalah Kulit (pisahkan koma)</label>
+            <input type="text" id="review-issues" placeholder="Contoh: Jerawat, Kusam, Pori Besar">
+        </div>
+        <div class="form-group">
+            <label>Rating</label>
+            <div id="star-selector" style="display:flex;gap:0.3rem">
+                <span onclick="setStars(1)">☆</span>
+                <span onclick="setStars(2)">☆</span>
+                <span onclick="setStars(3)">☆</span>
+                <span onclick="setStars(4)">☆</span>
+                <span onclick="setStars(5)">☆</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Ulasanmu</label>
+            <textarea id="review-text" rows="3" placeholder="Bagikan pengalamanmu dengan produk ini..."></textarea>
+        </div>
+
+        <!-- FOTO UPLOAD AREA -->
+        <div class="form-group">
+            <label>📸 Foto Hasil Pemakaian <span style="color:var(--muted);font-weight:400;text-transform:none">(Opsional)</span></label>
+            <div class="photo-upload-area" id="uploadArea" onclick="document.getElementById('review-photo-input').click()">
+                <div class="photo-upload-icon">📷</div>
+                <div class="photo-upload-text">Klik untuk pilih foto · <span>Browse</span></div>
+                <div style="font-size:0.7rem;color:var(--muted);margin-top:0.3rem">JPG, PNG • Maks 5MB</div>
+                <input type="file" id="review-photo-input" accept="image/jpeg,image/png,image/jpg,image/webp" style="display:none" onchange="previewReviewPhoto(event)">
+            </div>
+            <div id="photo-preview-container"></div>
+        </div>
+
+        <button class="btn-primary" style="width:100%;background:var(--warm-brown);padding:0.9rem" onclick="submitReview()">
+            📤 Kirim Ulasan
+        </button>
+    </div>
+</div>
+
+<!-- Lightbox untuk lihat foto full -->
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="Foto Review">
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== LANDING PAGE ==========
+let currentLandingSlide = 0;
+const totalLandingSlides = 3;
+
+function updateLandingDots() {
+    document.querySelectorAll('#landingDots .dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentLandingSlide);
+    });
+}
+
+function nextLandingSlide() {
+    if (currentLandingSlide < totalLandingSlides - 1) {
+        currentLandingSlide++;
+        document.getElementById('landingSlider').style.transform = `translateX(-${currentLandingSlide * 100}%)`;
+        updateLandingDots();
+    }
+}
+
+function goToLoginFromLanding() { showPage('page-login'); }
+
+document.querySelectorAll('#landingDots .dot').forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+        currentLandingSlide = i;
+        document.getElementById('landingSlider').style.transform = `translateX(-${currentLandingSlide * 100}%)`;
+        updateLandingDots();
+    });
+});
+
+document.addEventListener('keydown', (e) => {
+    if (document.getElementById('page-landing').classList.contains('active')) {
+        if (e.key === 'ArrowRight') nextLandingSlide();
+    }
+});
+
+// ========== VARIABEL GLOBAL ==========
+const API_BASE = 'http://localhost/kogniskin/api.php';
+let currentUser = null, currentQuiz = 0, quizAnswers = [], userSkinType = '', userIssues = [], selectedRating = 0, allProducts = [];
+let currentReviewPhotoBase64 = null;
+let adaNotifRekomendasi = false; // Penanda lencana notifikasi WhatsApp aktif
+
+// ========== ARTIKEL ==========
+const skincareNews = [
+    {title:"10 Rekomendasi Sunscreen Terbaik 2024", excerpt:"Lindungi kulitmu dari sinar UV dengan sunscreen rekomendasi dari para ahli dermatologi.", category:"Sunscreen", icon:"fa-sun", url:"https://news.google.com/search?q=sunscreen+terbaik+2024+skincare&hl=id"},
+    {title:"Perbedaan Retinol dan Tretinoin", excerpt:"Mana yang lebih efektif untuk mengatasi tanda-tanda penuaan dini?", category:"Anti Aging", icon:"fa-star", url:"https://news.google.com/search?q=retinol+tretinoin+perbedaan+skincare&hl=id"},
+    {title:"Cara Mengatasi Jerawat Hormonal", excerpt:"Tips dan bahan alami untuk mengatasi jerawat hormonal secara efektif.", category:"Acne", icon:"fa-leaf", url:"https://news.google.com/search?q=cara+mengatasi+jerawat+hormonal&hl=id"},
+    {title:"Skincare Routine Kulit Kombinasi", excerpt:"Rutinitas yang tepat untuk kulit berminyak di T-zone namun kering di pipi.", category:"Routine", icon:"fa-flask", url:"https://news.google.com/search?q=skincare+routine+kulit+kombinasi&hl=id"},
+    {title:"Pentingnya Niacinamide", excerpt:"Manfaat niacinamide untuk mencerahkan dan mengontrol minyak berlebih.", category:"Ingredients", icon:"fa-microscope", url:"https://news.google.com/search?q=niacinamide+manfaat+skincare&hl=id"},
+    {title:"Double Cleansing yang Benar", excerpt:"Teknik double cleansing untuk membersihkan makeup dan sunscreen secara total.", category:"Cleansing", icon:"fa-hand-sparkles", url:"https://news.google.com/search?q=double+cleansing+cuci+muka&hl=id"},
+    {title:"Skincare untuk Kulit Sensitif", excerpt:"Produk aman untuk kulit yang mudah iritasi dan kemerahan.", category:"Sensitive", icon:"fa-heart", url:"https://news.google.com/search?q=skincare+kulit+sensitif&hl=id"},
+    {title:"Manfaat Vitamin C untuk Kulit", excerpt:"Khasiat vitamin C untuk mencerahkan dan melindungi dari radikal bebas.", category:"Vitamins", icon:"fa-apple-alt", url:"https://news.google.com/search?q=manfaat+vitamin+c+kulit&hl=id"}
+];
+
+function renderHorizontalArticles() {
+    const container = document.getElementById('articlesScrollContainer');
+    if (!container) return;
+    container.innerHTML = skincareNews.map(a => `
+        <div class="blog-card-horizontal" onclick="window.open('${a.url}','_blank')">
+            <div class="blog-image-horizontal"><i class="fas ${a.icon}"></i></div>
+            <div class="blog-content-horizontal">
+                <div class="blog-category-horizontal">${a.category}</div>
+                <div class="blog-title-horizontal">${a.title}</div>
+                <div class="blog-excerpt-horizontal">${a.excerpt}</div>
+                <div class="blog-link-horizontal">Baca Selengkapnya <i class="fas fa-arrow-right"></i></div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ========== FOTO UPLOAD FUNCTIONS ==========
+function previewReviewPhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        showToast('❌ Format foto harus JPG, PNG, atau WEBP');
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        showToast('❌ Ukuran foto maksimal 5MB');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        currentReviewPhotoBase64 = e.target.result;
+        const sizeKB = Math.round(file.size / 1024);
+        const sizeText = sizeKB > 1024 ? `${(sizeKB/1024).toFixed(1)} MB` : `${sizeKB} KB`;
+
+        document.getElementById('photo-preview-container').innerHTML = `
+            <div class="photo-preview-container" style="display:flex;align-items:center;gap:0.8rem;background:var(--cream);padding:0.8rem;border-radius:12px;border:1px solid var(--border);margin-top:0.5rem;">
+                <img src="${currentReviewPhotoBase64}" class="photo-preview-img" alt="Preview" onclick="openLightbox('${currentReviewPhotoBase64}')">
+                <div style="flex:1;">
+                    <div style="font-size:0.8rem;font-weight:600;color:var(--dark-brown);">${file.name}</div>
+                    <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;">${sizeText} • Siap diupload ✅</div>
+                </div>
+                <button class="remove-photo-btn" onclick="removeReviewPhoto()" title="Hapus foto">✕</button>
+            </div>
+        `;
+        document.getElementById('uploadArea').style.borderColor = 'var(--sage)';
+        document.getElementById('uploadArea').style.background = '#F0F7F0';
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeReviewPhoto() {
+    currentReviewPhotoBase64 = null;
+    document.getElementById('photo-preview-container').innerHTML = '';
+    document.getElementById('review-photo-input').value = '';
+    document.getElementById('uploadArea').style.borderColor = '';
+    document.getElementById('uploadArea').style.background = '';
+}
+
+function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+}
+
+// ========== API ==========
+async function apiCall(endpoint, method, data) {
+    try {
+        const res = await fetch(`${API_BASE}/${endpoint}`, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: data ? JSON.stringify(data) : undefined
+        });
+        return await res.json();
+    } catch(e) {
+        return { success: false };
+    }
+}
+
+async function doLogin() {
+    const e = document.getElementById('login-email').value;
+    const p = document.getElementById('login-pass').value;
+    if (!e || !p) { showToast('Isi semua field'); return; }
+    showToast('Logging in...');
+    const r = await apiCall('login', 'POST', { email: e, password: p });
+    if (r.success) {
+        currentUser = r.user;
+        localStorage.setItem('ks_current', JSON.stringify(currentUser));
+        await loadUserData();
+        enterApp();
+        showToast(`Selamat datang ${currentUser.username}! 🌸`);
+    } else showToast(r.message || 'Login gagal');
+}
+
+async function doRegister() {
+    const u = document.getElementById('reg-username').value;
+    const e = document.getElementById('reg-email').value;
+    const p = document.getElementById('reg-password').value;
+    if (!u || !e || !p) { showToast('Isi semua field'); return; }
+    const r = await apiCall('register', 'POST', { username: u, email: e, password: p });
+    if (r.success) {
+        showToast('Akun berhasil dibuat! Silakan login.');
+        showPage('page-login');
+        document.getElementById('login-email').value = e;
+    } else showToast(r.message || 'Registrasi gagal');
+}
+
+async function loadUserData() {
+    if (!currentUser) return;
+    const r = await apiCall(`user/${currentUser.id}`, 'GET');
+    if (r.success && r.user) {
+        currentUser = r.user;
+        userSkinType = currentUser.skin_type || '';
+        userIssues = currentUser.issues || [];
+    }
+}
+
+function doLogout() {
+    currentUser = null; userSkinType = ''; userIssues = []; adaNotifRekomendasi = false;
+    const badge = document.getElementById('rec-notif-badge');
+    if (badge) badge.style.display = 'none';
+    localStorage.removeItem('ks_current');
+    showPage('page-login');
+    showToast('Berhasil keluar');
+}
+
+async function enterApp() {
+    if (!currentUser) { showPage('page-login'); return; }
+    showPage('page-app');
+    
+    // 1. Pindah ke halaman aplikasi utama
+    showTab('dashboard', null);
+    updateUI();
+    
+    // 2. Tunggu semua data dari database selesai dimuat 100%
+    await loadProducts();
+    renderFeaturedProducts();
+    renderAllProducts();
+    await loadReviews();
+    await loadStats();
+    renderHorizontalArticles();
+    
+    // 3. AMAN MUTLAK: Munculkan popup panduan jika user baru belum pernah scan wajah
+    if (!userSkinType) {
+        setTimeout(() => {
+            const modal = document.getElementById('quiz-modal');
+            if (modal) {
+                modal.classList.add('open');
+                showToast('💡 Yuk, ikuti panduan scan wajah dulu!');
+            }
+        }, 300);
+    }
+}
+
+function updateUI() {
+    if (!currentUser) return;
+    const i = currentUser.username[0].toUpperCase();
+    document.getElementById('nav-avatar').textContent = i;
+    document.getElementById('profile-avatar-big').textContent = i;
+    document.getElementById('profile-name').textContent = currentUser.username;
+    document.getElementById('profile-email').textContent = currentUser.email;
+    document.getElementById('profile-username').textContent = currentUser.username;
+    document.getElementById('profile-user-email').textContent = currentUser.email;
+    document.getElementById('profile-join-date').textContent = currentUser.join_date || new Date().toLocaleDateString('id-ID');
+    
+    if (userSkinType) {
+        document.getElementById('nav-skin-badge').innerHTML = `✨ ${userSkinType}`;
+        document.getElementById('profile-skin-badge').textContent = userSkinType;
+        document.getElementById('profile-skin-type').textContent = userSkinType;
+        document.getElementById('profile-concerns').textContent = 'Terdeteksi oleh Sistem AI';
+        document.getElementById('profile-quiz-date').textContent = currentUser.skin_quiz_date || new Date().toLocaleDateString('id-ID');
+    } else {
+        document.getElementById('nav-skin-badge').innerHTML = `📸 Scan Wajah AI`;
+        document.getElementById('profile-skin-badge').textContent = 'Belum dianalisis';
+        document.getElementById('profile-skin-type').textContent = '—';
+        document.getElementById('profile-concerns').textContent = '—';
+        document.getElementById('profile-quiz-date').textContent = '—';
+    }
+
+    renderFeaturedProducts();
+}
+
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function showTab(tab, event) {
+    // 1. Sembunyikan semua tab kontainer halaman dulu
+    ['dashboard', 'analysis', 'products', 'reviews', 'profile'].forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        if (el) el.style.display = t === tab ? 'block' : 'none';
+    });
+    
+    // 2. Bersihkan class 'active' dari semua tombol navigasi
+    document.querySelectorAll('.nav-links a, .nav-dropdown-btn').forEach(l => {
+        l.classList.remove('active');
+    });
+    
+    // 3. Atur status menu active secara presisi
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        document.querySelectorAll('.nav-links a, .nav-dropdown-btn').forEach(l => {
+            const text = l.textContent.trim().toLowerCase();
+            if (tab === 'dashboard' && text.includes('dashboard')) l.classList.add('active');
+            if (tab === 'analysis' && text.includes('analisis')) l.classList.add('active');
+            if (tab === 'profile' && text.includes('profile')) l.classList.add('active');
+            if ((tab === 'products' || tab === 'reviews') && text.includes('rekomendasi')) l.classList.add('active');
+        });
+    }
+    
+    // 4. Jalankan fungsi rendering data
+    if (tab === 'profile') updateUI();
+    if (tab === 'reviews') loadReviews();
+    if (tab === 'dashboard') renderHorizontalArticles();
+    if (tab === 'analysis') {
+        renderAnalysisTab();
+    }
+}
+
+// ========== KNOWLEDGE BASE DATA (3 CABANG FINAL) ==========
+const KS_SKIN_DATA = {
+    'Kulit Kering': {
+        desc: 'Kulit kering (Xerosis) terjadi akibat hilangnya integritas fungsional lapisan lipid pada stratum korneum, rendahnya kadar sekresi sebum oleh kelenjar sebasea, serta penurunan faktor hidrasi alami (Natural Moisturizing Factors / NMF). Kondisi ini menyebabkan peningkatan Trans-Epidermal Water Loss (TEWL), yang membuat kulit kehilangan elastisitas, terasa kaku, kasar, and rentan mengalami deskuamasi atau pengelupasan halus.',
+        badges: ['💧 Kelembapan Rendah', '🌿 Barrier Sensitif', '⚠️ Rentan Dehidrasi'],
+        chars: [
+            { icon: '🌵', title: 'Sensasi Ketat & Kaku', desc: 'Kulit terasa tertarik and kaku terutama pasca mencuci wajah akibat terkikisnya matriks interseluler and hilangnya komponen minyak pelindung.' },
+            { icon: '❄️', title: 'Deskuamasi & Flaky', desc: 'Akumulasi korneositorum mati yang gagal meluruh sempurna menimbulkan tekstur kasar, bersisik, pecahan kulit putih halus, and rentan gatal.' },
+            { icon: '💢', title: 'Mikro-Irritasi', desc: 'Sering muncul kemerahan halus (*erythema*) and perih saat terpapar perubahan cuaca atau produk berbahan aktif karena rusaknya skin barrier.' },
+            { icon: '👵', title: 'Garis Halus Dini', desc: 'Garis-garis halus akibat dehidrasi jaringan kulit tampak lebih jelas di area sekitar mata and dahi karena elastisitas dermis menurun.' }
+        ],
+        goodIngredients: [
+            { name: 'Ceramide NP, AP, EOP', why: 'Lipid esensial pembentuk "semen interseluler" yang merekatkan sel kulit, memperbaiki struktur barrier yang bolong, and mengunci air.' },
+            { name: 'Hyaluronic Acid & Glycerin', why: 'Humektan kuat yang bertindak seperti magnet air, menarik molekul hidrasi dari udara ke dalam lapisan epidermis secara intensif.' },
+            { name: 'Squalane & Shea Butter', why: 'Emolien kaya nutrisi yang mengisi sela-sela kulit yang kasar, melembutkan tekstur, and memberikan lapisan pelindung oklusif alami.' },
+            { name: 'Panthenol (Vitamin B5)', why: 'Bahan aktif penenang (*soothing agent*) yang mempercepat proliferasi sel, meredakan gatal, and menstimulasi penyembuhan luka jaringan.' }
+        ],
+        avoidIngredients: [
+            { name: 'Alcohol Denat / Isopropyl Alcohol', why: 'Pelarut volatil keras yang menguapkan sisa minyak and air alami epidermal secara instan, merusak lipid barrier.' },
+            { name: 'Sodium Lauryl Sulfate (SLS)', why: 'Surfaktan agresif dengan busa melimpah yang melarutkan protein and lipid alami kulit, memicu iritasi and rasa ketat parah.' },
+            { name: 'Salicylic Acid (BHA > 1%)', why: 'Agen keratolitik larut minyak yang mengikis sebum; jika dipakai pada kulit kering akan memperparah pengelupasan and memicu dehidrasi eksponensial.' },
+            { name: 'Fragrance / Parfum Sintetis', why: 'Senyawa aromatik tidak stabil yang sering menjadi alergen nomor satu, memicu dermatitis kontak and kemerahan pada kulit kering.' }
+        ],
+        tips: [
+            'Gunakan metode *Gentle Cleansing*: Pilih sabun cuci muka bertekstur losion susu atau krim, non-busa, and memiliki pH seimbang (5.5) yang tidak merusak asam mantel kulit.',
+            'Terapkan *3-Minute Rule*: Aplikasikan hydrating toner, serum, and pelembap oklusif tebal maksimal 3 menit setelah membasuh muka saat kondisi kulit masih lembap.',
+            'Hindari eksfoliasi fisik: Dilarang menggunakan scrub wajah kasar, spons, atau sikat pembersih. Gunakan eksfolian kimiawi lembut jenis PHA (Gluconolactone) 1x seminggu.',
+            'Proteksi Suhu: Jangan membasuh wajah dengan air yang terlalu panas karena air panas melarutkan lemak pelindung kulit dengan sangat cepat. Gunakan air bersuhu suam-suam kuku.',
+            'Night Routine Optimizer: Di malam hari, kunci seluruh rangkaian skincare dengan *face oil* (seperti Jojoba atau Argan Oil) atau *sleeping mask* untuk menahan hidrasi saat tidur di ruangan ber-AC.'
+        ],
+        references: [
+            { source: 'American Academy of Dermatology (AAD) - Dermatologist Guidelines for Dry Skin Relief', url: 'https://www.aad.org/public/diseases/dry-skin/skin-care' },
+            { source: 'Journal of Clinical and Aesthetic Dermatology - The Role of Moisturizers in Skin Barrier Function', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4885180/' },
+            { source: 'Dermatology Research and Practice - Clinical Management of Xerosis Cutis', url: 'https://www.hindawi.com/journals/drp/' }
+        ]
+    },
+    'Kulit Berminyak': {
+        desc: 'Kulit berminyak (Seborrhea) dipicu oleh regulasi hormon androgen yang menyebabkan hiperaktivitas kelenjar sebasea. Kelenjar ini memproduksi sebum berlebih dalam volume tinggi (didominasi trigliserida, lilin ester, and skualen). Kondisi ini menyebabkan pori-pori melebar, penumpukan sel kulit mati pada muara folikel (hiperkeratosis), and menciptakan lingkungan anaerobik yang ideal bagi proliferasi bakteri penyebab jerawat.',
+        badges: ['🔥 Sebum Berlebih', '◈ Pori-pori Terbuka', '🛡️ Rentan Komedo/Jerawat'],
+        chars: [
+            { icon: '✨', title: 'Mengkilap & Greasy', desc: 'Permukaan kulit tampak berkilau and terasa lengket akibat tumpukan lipid maskulin, terutama dalam beberapa jam pasca mencuci wajah.' },
+            { icon: '🔍', title: 'Pori-Pori Distensi', desc: 'Dinding folikel meregang and melebar secara permanen untuk mengalirkan volume sebum yang tinggi dari dalam lapisan dermis.' },
+            { icon: '🍓', title: 'Komedo Hitam & Putih', desc: 'Sebum yang terperangkap di muara pori teroksidasi oleh udara menjadi *blackheads*, atau tertutup kulit menjadi *whiteheads*.' },
+            { icon: '🌋', title: 'Erupsi Akneiformis', desc: 'Sering mengalami jerawat papul, pustul, atau jerawat batu karena pori-pori tersumbat berikatan dengan sebum and bakteri.' }
+        ],
+        goodIngredients: [
+            { name: 'Niacinamide (Vitamin B3)', why: 'Menekan laju lipogenesis (produksi minyak) langsung di kelenjar sebasea, memudarkan noda bekas jerawat, and merapatkan pori.' },
+            { name: 'Salicylic Acid (BHA 1-2%)', why: 'Bahan aktif lipofilik yang mampu menembus genangan minyak wajah untuk melarutkan sumbatan keratin and komedo di dalam folikel.' },
+            { name: 'Zinc PCA & Green Tea (EGCG)', why: 'Zat sebum-regulator and antiandrogenik topikal yang menghambat enzim 5-alpha reductase, mengurangi peradangan jerawat secara signifikan.' },
+            { name: 'Kaolin & Bentonite Clay', why: 'Mineral absorben alami berkemampuan ionik yang menghisap sisa minyak berlebih, kotoran, and toksin dari permukaan kulit.' }
+        ],
+        avoidIngredients: [
+            { name: 'Coconut Oil & Isopropyl Myristate', why: 'Bahan dengan tingkat komedogenik skala tertinggi (4-5) yang dijamin menyumbat pori-pori and langsung memicu bruntunan parah.' },
+            { name: 'Lauric & Myristic Acid (Berlebih)', why: 'Asam lemak yang sering ada di sabun batangan/foam pencuci muka keras; mengikis total minyak and merusak pH, memicu *rebound effect* (minyak keluar lebih banyak).' },
+            { name: 'Heavy Silicones (Dimethicone Pekat)', why: 'Membentuk lapisan kedap air (*seal*) di atas wajah yang menjebak sebum, keringat, and bakteri patogen di dalam pori.' },
+            { name: 'Cocoa Butter', why: 'Lemak padat oklusif tinggi yang terlalu kaya lipid, memperparah kilang minyak and penyumbatan keratin folikel.' }
+        ],
+        tips: [
+            'Double Cleansing Tepat: Gunakan *micellar water* non-oil di sore hari, dilanjutkan dengan sabun wajah bertekstur gel jernih yang mengandung Zinc atau BHA ringan.',
+            'Oil-Free Hydration: Jangan pernah melewat Pelembap! Gunakan pelembap bertekstur gel cair atau lotion ringan berbahan dasar air (*water-based*) agar kulit tidak memproduksi minyak tambahan karena kompensasi dehidrasi.',
+            'Rutin Eksfoliasi BHA: Gunakan toner atau serum BHA 2% sebanyak 2-3 kali seminggu pada malam hari khusus di area wajah yang rentan berkomedo (seperti hidung and dahi).',
+            'Deep Cleansing Clay Mask: Aplikasikan masker tanah liat (Clay Mask) 1-2 kali seminggu selama 10 menit untuk mendetoksifikasi pori-pori dari tumpukan sebum.',
+            'Sunscreen Matte-Finish: Gunakan tabir surya berlabel *Oily-Skin Match*, *Non-Comedogenic*, and memberikan hasil akhir *matte* atau *powder-finish* agar wajah bebas kilap.'
+        ],
+        references: [
+            { source: 'Journal of Cosmetic Dermatology - Pathophysiology of Sebum Production and Oily Skin Management', url: 'https://onlinelibrary.wiley.com/journal/14732165' },
+            { source: 'Clinical, Cosmetic and Investigational Dermatology - Treatment Strategies for Acne-Prone Oily Skin', url: 'https://www.dovepress.com/clinical-cosmetic-and-investigational-dermatology-journal' },
+            { source: 'BPOM RI - Daftar Bahan Kosmetika Komedogenik and Regulasi Pengawasannya', url: 'https://www.pom.go.id' }
+        ]
+    },
+    'Kulit Normal': {
+        desc: 'Kulit normal (Euderma) merupakan kondisi kulit ideal and seimbang (*homeostasis*). Parameter hidrasi epidermis (kadar air) and laju sekresi kelenjar minyak berada dalam rasio yang sempurna. Lapisan hidrolipid (asam mantel) berfungsi optimal sebagai perisai alami, siklus deskuamasi sel keratin berjalan konstan setiap 28 hari, and kulit memiliki toleransi imun yang baik terhadap faktor lingkungan eksternal.',
+        badges: ['⚖️ Homeostasis Seimbang', '✨ Tekstur Halus', '🛡️ Skin Barrier Kuat'],
+        chars: [
+            { icon: '⚖️', title: 'Rasio Air-Minyak Ideal', desc: 'Produksi sebum and air tercukupi dengan pas; kulit tidak menunjukkan area mengkilap berlebih ataupun area kering mengelupas.' },
+            { icon: '🔬', title: 'Folikel Tersamar', desc: 'Ukuran diameter pori-pori tampak kecil, kencang, bersih dari komedo, and tekstur permukaan kulit halus merata.' },
+            { icon: '🍑', title: 'Rona Kulit Cerah', desc: 'Sirkulasi darah mikro pada pembuluh kapiler berjalan lancar, memberikan rona kulit yang segar, elastis, and sehat.' },
+            { icon: '🛡️', title: 'Daya Tahan Tinggi', desc: 'Kulit jarang bereaksi negatif (kemerahan/perih) saat mencoba produk skincare baru karena pertahanan skin barrier-nya kuat.' }
+        ],
+        goodIngredients: [
+            { name: 'Ascorbic Acid (Vitamin C)', why: 'Antioksidan superior yang menetralkan radikal bebas akibat polusi, menstimulasi sintesis kolagen, and menjaga kecerahan rona wajah.' },
+            { name: 'Retinol / Retinoid', why: 'Turunan Vitamin A yang mempercepat diferensiasi seluler (*cell turnover*), memelihara kekencangan jaringan dermis, and mencegah kerutan.' },
+            { name: 'Hyaluronic Acid & Centella', why: 'Menjaga level hidrasi konstan yang sudah ideal and menenangkan kulit dari paparan sinar UV harian.' },
+            { name: 'Peptides Complex', why: 'Rangkaian asam amino yang bertindak sebagai pembawa pesan seluler untuk merangsang elastisitas and kepadatan tekstur kulit.' }
+        ],
+        avoidIngredients: [
+            { name: 'Kandungan Alkohol Keras (Dosis Tinggi)', why: 'Penggunaan jangka panjang yang tidak diimbangi hidrasi dapat merusak kestabilan ekosistem kulit normal yang sudah sehat.' },
+            { name: 'Over-Exfoliation (AHA/BHA Berlapis)', why: 'Mencampur terlalu banyak zat asam eksfoliator dosis tinggi berisiko mengikis lapisan pelindung alami and memicu sensitivitas.' },
+            { name: 'Skincare Berbahan Aktif Bentrok', why: 'Menggabungkan Retinol tinggi and Vitamin C murni secara bersamaan berisiko menimbulkan iritasi kimiawi tak perlu.' },
+            { name: 'Produk Terlalu Oklusif / Berat', why: 'Menggunakan krim yang terlalu pekat and berminyak (biasanya untuk kulit lansia/kering parah) bisa menyumbat pori kulit normal.' }
+        ],
+        tips: [
+            'Pertahankan *Basic Skincare*: Kunci utama kulit normal adalah konsistensi. Cukup gunakan facial wash lembut, hydrating toner, moisturizer bertekstur lotion ringan, and sunscreen.',
+            'Investasi Sunscreen: Lindungi aset kulit sehatmu dari penuaan dini dengan mengaplikasikan tabir surya SPF 30+ PA+++ setiap pagi and lakukan *re-apply* saat beraktivitas di luar.',
+            'Eksfoliasi Preventif: Lakukan eksfoliasi ringan menggunakan AHA (Glycolic Acid 5%) cukup 1-2 kali seminggu di malam hari untuk mempertahankan kilau alami wajah.',
+            'Mulai Gunakan Anti-Aging: Di malam hari, kenalkan kulit dengan serum Retinol konsentrasi rendah (0.1% - 0.5%) untuk investasi jangka panjang menjaga produksi kolagen kulit.',
+            'Gaya Hidup Seimbang: Kulit normal sangat responsif terhadap kondisi tubuh. Jaga hidrasi dengan minum air putih minimal 2 liter and tidur teratur 7-8 jam demi regenerasi sel maksimal.'
+        ],
+        references: [
+            { source: 'WebMD Dermatology - Understanding Normal Skin Structure and Skincare Maintenance', url: 'https://www.webmd.com/beauty/whats-your-skin-type' },
+            { source: 'Journal of Investigative Dermatology - Cellular Turnover and Homeostasis of Healthy Epidermis', url: 'https://www.jidonline.org' },
+            { source: 'BPOM RI - Pedoman Mempertahankan Kesehatan Kulit Alami', url: 'https://www.pom.go.id' }
+        ]
+    }
+};
+
+function renderAnalysisTab() {
+    const container = document.getElementById('analysis-content');
+    if (!container) return;
+    
+    // 🔥 GERBANG LOGIKA MUTLAK: Jika belum scan, tampilkan instruksi placeholder kosongan
+    if (!userSkinType) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:4rem 2rem; color:var(--muted); background:white; border-radius:24px; margin-top:1rem; border: 1px dashed #E8D5C0;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+                <h4 style="font-family:'Poppins'; font-weight:600; font-size:1.1rem; color:#3E2723; margin-bottom:0.5rem;">Belum Ada Riwayat Analisis Kulit</h4>
+                <p style="font-size: 0.8rem; max-width: 460px; margin: 0 auto; line-height: 1.6;">
+                    Silakan posisikan wajah Anda di depan kamera pada box scanner di atas, kemudian tekan tombol <b style="color:var(--terracotta);">"Aktifkan Kamera"</b> untuk memulai analisis AI perdana Anda.
+                </p>
+            </div>
+        `;
+        return;
+    }
+
+    const currentType = userSkinType;
+    const data = KS_SKIN_DATA[currentType];
+    if (!data) return;
+
+    container.innerHTML = `
+        <div class="ks-result-card" style="background: white; padding: 2rem; border-radius: 24px; margin-top: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+            <div class="ks-analysis-hero-card" style="background: linear-gradient(135deg, #6B3A2A 0%, #C4895A 60%); padding: 1.5rem; border-radius: 20px; color: white; margin-bottom: 1.5rem;">
+                <h2 style="color: white; font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Jenis Kulit: ${currentType.replace('Kulit ','')}</h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    ${data.badges.map(b => `<span style="background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 50px; font-size: 0.7rem; border: 1px solid rgba(255,255,255,0.3); color: white;">${b}</span>`).join('')}
+                </div>
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.9); line-height: 1.6;">${data.desc}</p>
+            </div>
+            
+            <div class="ks-section-label" style="font-weight: 600; color: #6B3A2A; margin: 1rem 0; font-size: 0.85rem;">✦ KARAKTERISTIK UTAMA</div>
+            <div class="ks-chars-grid">
+                ${data.chars.map(c => `
+                    <div class="ks-char-card">
+                        <div class="ks-char-icon">${c.icon}</div>
+                        <div class="ks-char-title">${c.title}</div>
+                        <div class="ks-char-desc">${c.desc}</div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div class="ks-section-label" style="font-weight: 600; color: #6B3A2A; margin: 1.5rem 0 1rem; font-size: 0.85rem;">✦ ANALISIS KANDUNGAN SKINCARE</div>
+            <div class="ks-ing-wrapper">
+                <div class="ks-ing-card good">
+                    <div class="ks-ing-header">
+                        <div class="ks-ing-header-icon">✓</div>
+                        <div>
+                            <div class="ks-ing-header-title">Bahan yang Dibutuhkan</div>
+                            <div class="ks-ing-header-sub">Sangat direkomendasikan</div>
+                        </div>
+                    </div>
+                    <div>
+                        ${data.goodIngredients.map(i => `
+                            <div class="ks-ing-item">
+                                <div class="ks-ing-dot" style="background: #D4EDCF; color: #2E7D32;">✓</div>
+                                <div><div class="ks-ing-name">${i.name}</div><div class="ks-ing-why">${i.why}</div></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="ks-ing-card avoid">
+                    <div class="ks-ing-header">
+                        <div class="ks-ing-header-icon">✕</div>
+                        <div>
+                            <div class="ks-ing-header-title">Bahan yang Dihindari</div>
+                            <div class="ks-ing-header-sub">Berisiko memicu efek buruk</div>
+                        </div>
+                    </div>
+                    <div>
+                        ${data.avoidIngredients.map(i => `
+                            <div class="ks-ing-item">
+                                <div class="ks-ing-dot" style="background: #FAD5C5; color: #BF360C;">✕</div>
+                                <div><div class="ks-ing-name">${i.name}</div><div class="ks-ing-why">${i.why}</div></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ks-section-label" style="font-weight: 600; color: #6B3A2A; margin: 1.5rem 0 1rem; font-size: 0.85rem;">✦ TIPS PERAWATAN HARIAN</div>
+            <div class="ks-tips-card">
+                ${data.tips.map((t,i)=>`
+                    <div class="ks-tip-item">
+                        <div class="ks-tip-num">${i+1}</div>
+                        <div class="ks-tip-text">${t}</div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div class="ks-section-label" style="font-weight: 600; color: #6B3A2A; margin: 1.5rem 0 0.5rem; font-size: 0.85rem;">✦ LANDASAN MEDIS & JURNAL REFERENSI</div>
+            <div style="background: #FFF9F0; padding: 1rem; border-radius: 16px; border: 1px solid #E8D5C0; font-size: 0.75rem;">
+                ${data.references.map(r => `
+                    <div style="margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-bookmark" style="color: var(--terracotta);"></i>
+                        <span style="color: var(--charcoal); font-weight: 500;">[Jurnal] ${r.source}:</span>
+                        <a href="${r.url}" target="_blank" style="color: var(--terracotta); text-decoration: underline; font-weight: 600; cursor: pointer;">Buka Sumber Referensi ↗</a>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+// ========== LOGIKA KAMERA ASLI & BACKEND TENSORFLOW ==========
+let streamAsli = null;
+
+async function aktifkanKameraAsli() {
+    const video = document.getElementById('ks-video');
+    const placeholder = document.getElementById('ks-camera-placeholder');
+    const btnStart = document.getElementById('btn-start-camera');
+    const btnCapture = document.getElementById('btn-capture-skin');
+
+    try {
+        streamAsli = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } });
+        video.srcObject = streamAsli;
+        video.style.display = "block";
+        placeholder.style.setProperty("display", "none", "important");
+        btnStart.style.display = "none"; 
+        btnCapture.style.display = "inline-block"; 
+        showToast("Kamera Real-time AI Aktif! 📸");
+    } catch (err) {
+        showToast("❌ Gagal membuka kamera. Periksa izin browser.");
+    }
+}
+
+async function jepretDanPrediksiAI() {
+    const video = document.getElementById('ks-video');
+    const canvas = document.getElementById('ks-canvas');
+    const context = canvas.getContext('2d');
+
+    canvas.width = 640;
+    canvas.height = 480;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob(async (blob) => {
+        let formData = new FormData();
+        formData.append("file", blob, "scan_wajah.jpg");
+        showToast("TensorFlow sedang memproses matriks citra wajah... ⚡");
+
+        try {
+            let response = await fetch("http://127.0.0.1:8000/predict", { method: "POST", body: formData });
+            let hasilAI = await response.json();
+            
+            userSkinType = hasilAI.userSkinType;
+            userIssues = ['Hasil Klasifikasi Model CNN'];
+
+            if (streamAsli) streamAsli.getTracks().forEach(track => track.stop());
+            video.style.display = "none";
+            document.getElementById('ks-camera-placeholder').style.setProperty("display", "flex", "important");
+            document.getElementById('btn-start-camera').style.display = "inline-block";
+            document.getElementById('btn-capture-skin').style.display = "none";
+
+            showToast(`AI Sukses Mendeteksi: ${userSkinType} (${(hasilAI.confidence * 100).toFixed(2)}%)`);
+
+            const r = await apiCall(`update_skin/${currentUser.id}`, 'POST', { skin_type: userSkinType, issues: userIssues });
+            if (r.success) {
+                currentUser.skin_type = userSkinType;
+                currentUser.issues = userIssues;
+                localStorage.setItem('ks_current', JSON.stringify(currentUser));
+                
+                aktifkanLencanaRekomendasi(); // Trigger titik merah WA di navbar
+                showTab('analysis', null); 
+                updateUI();
+            }
+        } catch (error) {
+            showToast("❌ Gagal terhubung ke API Python. Pastikan uvicorn sudah menyala!");
+        }
+    }, "image/jpeg");
+}
+
+// ========== SISTEM NOTIFIKASI & REKOMENDASI 3 CABANG ==========
+function aktifkanLencanaRekomendasi() {
+    adaNotifRekomendasi = true;
+    const badge = document.getElementById('rec-notif-badge');
+    if (badge) badge.style.display = 'inline-block';
+}
+
+function closeRecAlertAndFilter() {
+    const alertModal = document.getElementById('rec-alert-modal');
+    if (alertModal) alertModal.classList.remove('open');
+    showToast(`Menampilkan rekomendasi produk untuk ${userSkinType} ✨`);
+}
+
+function filterSkincareTigaCabang() {
+    if (userSkinType === 'Kulit Kering' || userSkinType === 'Kulit Berminyak' || userSkinType === 'Kulit Normal') {
+        const produkTersaring = allProducts.filter(p => p.skin_types && p.skin_types.includes(userSkinType));
+        const container = document.getElementById('all-products');
+        if (container) {
+            if (produkTersaring.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:3rem; color:var(--muted); grid-column: 1/-1;">Belum ada produk yang terdaftar untuk ${userSkinType}.</div>`;
+            } else {
+                container.innerHTML = produkTersaring.map(p => renderProductCard(p, true)).join('');
+            }
+        }
+    }
+}
+
+// ========== PRODUCTS RENDERING ==========
+async function loadProducts() {
+    const r = await apiCall('products', 'GET');
+    if (r.success) allProducts = r.products;
+}
+
+function renderProductCard(p, showMatch = false) {
+    // 1. Ambil list bahan aktif yang dibutuhkan berdasarkan tipe kulit hasil scan AI saat ini
+    let goodIngredientsNeeded = [];
+    if (userSkinType && KS_SKIN_DATA[userSkinType]) {
+        // Ambil nama-nama ingredient baik dari Knowledge Base KS_SKIN_DATA
+        goodIngredientsNeeded = KS_SKIN_DATA[userSkinType].goodIngredients.map(ing => ing.name.toLowerCase());
+    }
+
+    // 2. Parsing data kandungan (ingredients) dari produk di database
+    let productIngredients = [];
+    if (p.ingredients) {
+        try {
+            productIngredients = (typeof p.ingredients === 'string' ? JSON.parse(p.ingredients) : p.ingredients).map(ing => ing.toLowerCase());
+        } catch (e) {
+            productIngredients = [];
+        }
+    }
+
+    // 3. ALGORITMA JACCARD SIMILARITY (Hitung Persentase Secara Real-time)
+    let dynamicMatchPercent = 0;
+    if (goodIngredientsNeeded.length > 0 && productIngredients.length > 0) {
+        // Hitung Irisan (Intersection): Bahan yang dibutuhkan AND ada di produk
+        const intersection = goodIngredientsNeeded.filter(ing => productIngredients.some(pIng => pIng.includes(ing) || ing.includes(pIng)));
+        
+        // Hitung Gabungan (Union): Total variasi bahan unik dari kedua himpunan
+        const union = new Set([...goodIngredientsNeeded, ...productIngredients]);
+        
+        // Rumus Jaccard: (Irisan / Gabungan) * 100
+        if (union.size > 0) {
+            const jaccardScore = intersection.length / union.size;
+            
+            // Lakukan normalisasi/pembobotan basis agar angka kelayakan terlihat proporsional (rentang 75% - 98%)
+            dynamicMatchPercent = Math.round(75 + (jaccardScore * 23));
+        }
+    } else {
+        // Fallback jika belum scan atau data kosong, gunakan nilai bawaan database
+        dynamicMatchPercent = p.match_percent || 0;
+    }
+
+    // 4. GENERATE VISUAL EMOJI (Berdasarkan kategori produk)
+    const imageHtml = `<div class="emoji-icon" style="font-size: 4.5rem; padding: 1.5rem; display: flex; align-items: center; justify-content: center; background: #FFF9F0; width:100%; height:100%;">${p.image_icon || '🧴'}</div>`;
+
+    const matchBadge = showMatch && userSkinType && p.skin_types && p.skin_types.includes(userSkinType)
+        ? '<span class="match-badge">✓ Direkomendasikan</span>' : '';
+        
+    // Tampilkan hasil perhitungan persentase dinamis ke UI card
+    const matchPercentHtml = showMatch && userSkinType 
+        ? `<div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">✨ ${dynamicMatchPercent}% cocok</div>` : '';
+
+    const ingList = productIngredients.length > 0 
+        ? (typeof p.ingredients === 'string' ? JSON.parse(p.ingredients) : p.ingredients).join(', ') 
+        : 'Ingredients Esensial';
+
+    return `
+        <div class="product-card" onclick="showProductDetail(${p.id})">
+            <div class="product-image" style="height: 180px; display: flex; align-items: center; justify-content: center; background: #FFF9F0;">${imageHtml}</div>
+            <div class="product-info">
+                <div class="product-category">${p.category}</div>
+                <div class="product-name" style="font-weight: 700; font-size: 0.85rem; height: 2.6rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${p.name}</div>
+                <div class="product-price" style="color: var(--terracotta); font-weight: 700; font-size: 0.85rem; margin-top: 0.2rem;">${p.price}</div>
+                <div style="font-size:0.65rem; color:var(--muted); margin: 0.3rem 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${ingList}">🧪 Kandungan: ${ingList}</div>
+                <div class="product-rating">${'★'.repeat(Math.floor(p.rating || 0))}${'☆'.repeat(5 - Math.floor(p.rating || 0))} <span style="color:var(--muted);font-size:0.7rem">(${p.reviews_count || 0})</span></div>
+                ${matchBadge}
+                ${matchPercentHtml}
+            </div>
+        </div>
+    `;
+}
+
+function renderFeaturedProducts() {
+    const container = document.getElementById('featured-products');
+    if (!container) return;
+
+    // 1. GERBANG LOGIKA: Jika user belum punya data jenis kulit, kosongkan dashboard!
+    if (!userSkinType) {
+        container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:2rem; width:100%; border: 1px dashed var(--border); border-radius:20px;">Silakan lakukan scan wajah terlebih dahulu untuk membuka rekomendasi produk khusus kamu.</div>`;
+        return;
+    }
+
+    // 2. Ambil list bahan aktif dari Knowledge Base
+    let goodIngredientsNeeded = [];
+    if (KS_SKIN_DATA[userSkinType]) {
+        goodIngredientsNeeded = KS_SKIN_DATA[userSkinType].goodIngredients.map(ing => ing.name.toLowerCase());
+    }
+
+    // 3. Hitung skor Jaccard untuk SEMUA produk yang cocok dengan tipe kulit
+    const scoredProducts = allProducts.map(p => {
+        if (!p.skin_types || !p.skin_types.includes(userSkinType)) {
+            return { ...p, calculatedScore: 0 };
+        }
+
+        let productIngredients = [];
+        if (p.ingredients) {
+            try {
+                productIngredients = (typeof p.ingredients === 'string' ? JSON.parse(p.ingredients) : p.ingredients).map(ing => ing.toLowerCase());
+            } catch (e) {
+                productIngredients = [];
+            }
+        }
+
+        let score = 0;
+        if (goodIngredientsNeeded.length > 0 && productIngredients.length > 0) {
+            const intersection = goodIngredientsNeeded.filter(ing => productIngredients.some(pIng => pIng.includes(ing) || ing.includes(pIng)));
+            const union = new Set([...goodIngredientsNeeded, ...productIngredients]);
+            if (union.size > 0) {
+                const jaccardScore = intersection.length / union.size;
+                score = Math.round(75 + (jaccardScore * 23)); 
+            }
+        } else {
+            score = p.match_percent || 0;
+        }
+
+        return { ...p, calculatedScore: score };
+    });
+
+    // 4. 🔥 PERBAIKAN ALGORITMA: Wajib cari 1 terbaik per kategori tanpa toleransi macet
+    const categoriesNeeded = ['cleanser', 'toner', 'serum', 'moisturizer', 'sunscreen'];
+    const featured = [];
+
+    categoriesNeeded.forEach(cat => {
+        // Ambil semua produk yang sesuai kategori & tipe kulit user
+        const itemsInCat = scoredProducts.filter(p => p.category === cat && p.calculatedScore > 0);
+        
+        // Urutkan dari yang skornya tertinggi ke terendah
+        itemsInCat.sort((a, b) => b.calculatedScore - a.calculatedScore);
+        
+        // LANGKAH AMAN: Ambil produk urutan pertama (paling maksimal skornya di kategori itu)
+        if (itemsInCat.length > 0) {
+            featured.push(itemsInCat[0]);
+        }
+    });
+
+    // 5. Cetak ke HTML Dashboard beserta tombol navigasi
+    if (featured.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:2rem; width:100%; border: 1px dashed var(--border); border-radius:20px;">Belum ada rangkaian produk yang memenuhi kriteria untuk jenis ${userSkinType}.</div>`;
+    } else {
+        let htmlContent = featured.map(p => renderProductCard(p, true)).join('');
+        
+        htmlContent += `
+            <div style="grid-column: 1 / -1; text-align: center; margin-top: 2.5rem; width: 100%;">
+                <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.6rem;">
+                    Menampilkan 1 produk terbaik dari setiap tahapan skincare routine kamu.
+                </p>
+                <button class="btn-outline" 
+                        style="padding: 10px 32px; font-size: 0.85rem; font-weight: 600; border-color: var(--warm-brown); color: var(--warm-brown); background: transparent;" 
+                        onclick="showTab('products', null)">
+                    Eksplor Pilihan Produk Lainnya →
+                </button>
+            </div>
+        `;
+        
+        container.innerHTML = htmlContent;
+    }
+}
+
+function renderAllProducts() {
+    const cats = ['all','cleanser','toner','serum','moisturizer','sunscreen'];
+    const fb = document.getElementById('filter-bar');
+    if (fb) fb.innerHTML = cats.map(c => `<button class="filter-btn ${c==='all'?'active':''}" onclick="filterProducts('${c}',this)">${c==='all'?'Semua':c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
+    filterProducts('all', null);
+}
+
+function filterProducts(cat, btn) {
+    const c = document.getElementById('all-products');
+    
+    // 🔥 GERBANG LOGIKA UTAMA: Jika belum scan, kunci total halaman rekomendasi produk!
+    if (!userSkinType) {
+        if (c) {
+            c.innerHTML = `
+                <div style="text-align:center; padding:4rem; color:var(--muted); grid-column: 1/-1; border: 2px dashed #E8D5C0; border-radius:20px; background: #FFF9F0;">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔒</div>
+                    <h5 style="font-weight: 600; color: #5D4037; margin-bottom: 0.5rem;">Menu Rekomendasi Terkunci!</h5>
+                    <p style="font-size: 0.8rem; max-width: 400px; margin: 0 auto; line-height: 1.5;">
+                        Anda harus melakukan <b>Scan Wajah AI</b> terlebih dahulu agar sistem kami dapat memfilter produk yang aman dan sesuai untuk karakteristik kulit Anda.
+                    </p>
+                </div>
+            `;
+        }
+        return;
+    }
+
+    if (btn) {
+        document.querySelectorAll('#filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    let baseProducts = allProducts;
+    if (userSkinType === 'Kulit Kering' || userSkinType === 'Kulit Berminyak' || userSkinType === 'Kulit Normal') {
+        baseProducts = allProducts.filter(p => p.skin_types && p.skin_types.includes(userSkinType));
+    }
+
+    const filtered = cat === 'all' ? baseProducts : baseProducts.filter(p => p.category === cat);
+    
+    if (c) {
+        if (filtered.length === 0) {
+            c.innerHTML = `<div style="text-align:center; padding:3rem; color:var(--muted); grid-column: 1/-1;">Belum ada kategori ${cat} yang terdaftar untuk ${userSkinType}.</div>`;
+        } else {
+            c.innerHTML = filtered.map(p => renderProductCard(p, true)).join('');
+        }
+    }
+}
+
+function showProductDetail(id) {
+    const p = allProducts.find(p => p.id == id);
+    if (p) showToast(`${p.name} — ${p.price}`);
+}
+
+// ========== REVIEWS SECTION ==========
+async function loadReviews(filter = 'all') {
+    const r = await apiCall('reviews', 'GET');
+    let revs = r.success ? r.reviews : [];
+
+    if (filter === 'same-skin' && userSkinType) revs = revs.filter(r => r.skin_type === userSkinType);
+    else if (filter === 'top-rated') revs = revs.filter(r => r.rating >= 4).sort((a,b) => b.rating - a.rating);
+
+    const c = document.getElementById('reviews-list');
+    if (!c) return;
+
+    if (revs.length === 0) {
+        c.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);">Belum ada ulasan.</div>';
+        return;
+    }
+
+    c.innerHTML = revs.map(r => {
+        const photoHtml = (r.photo_url && r.photo_url.trim() !== '')
+            ? `<div class="review-photo-wrapper" onclick="openLightbox('${r.photo_url.replace(/'/g, "\\'")}')">
+                   <img src="${r.photo_url}" alt="Foto review ${r.username}" loading="lazy" onerror="this.parentElement.style.display='none'">
+                   <div class="review-photo-label">📸 Tap untuk lihat full</div>
+               </div>`
+            : '';
+
+        const issuesText = Array.isArray(r.issues) ? r.issues.join(', ') : (r.issues || '');
+        const sameSkinBadge = userSkinType && r.skin_type === userSkinType
+            ? '<span class="match-badge" style="margin-left:auto;flex-shrink:0">Kulit sama! 🌟</span>' : '';
+
+        return `
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:${r.avatar || '#C4785A'}">${(r.username || 'U')[0].toUpperCase()}</div>
+                    <div style="flex:1">
+                        <strong style="font-size:0.9rem">${r.username || 'User'}</strong>
+                        <div style="font-size:0.65rem;color:var(--muted);margin-top:1px">${r.skin_type || '—'}</div>
+                    </div>
+                    ${sameSkinBadge}
+                </div>
+                <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+                <p class="review-text">"${r.review_text}"</p>
+                <div class="review-product-label">📦 ${r.product_name || `Produk #${r.product_id}`}</div>
+                ${issuesText ? `<div style="font-size:0.65rem;color:var(--muted);margin-top:0.3rem">Masalah: ${issuesText}</div>` : ''}
+                ${photoHtml}
+            </div>
+        `;
+    }).join('');
+}
+
+function filterReviews(f, btn) {
+    document.querySelectorAll('#review-filters .filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    loadReviews(f);
+}
+
+function openReviewModal() {
+    if (!userSkinType) { showToast('Ikuti skin scan dulu!'); showTab('analysis', null); return; }
+    const ps = document.getElementById('review-product');
+    if (ps) ps.innerHTML = allProducts.map(p => `<option value="${p.id}">${p.name} — ${p.price}</option>`).join('');
+    const st = document.getElementById('review-skin-type');
+    if (st) st.value = userSkinType;
+    
+    removeReviewPhoto();
+    document.getElementById('review-text').value = '';
+    document.getElementById('review-issues').value = '';
+    selectedRating = 0;
+    setStars(0);
+    document.getElementById('review-modal').classList.add('open');
+}
+
+function setStars(n) {
+    selectedRating = n;
+    document.querySelectorAll('#star-selector span').forEach((s, i) => s.textContent = i < n ? '★' : '☆');
+}
+
+async function submitReview() {
+    const pid = document.getElementById('review-product').value;
+    const p = allProducts.find(p => p.id == pid);
+    const st = document.getElementById('review-skin-type').value;
+    const issues = document.getElementById('review-issues').value;
+    const txt = document.getElementById('review-text').value;
+
+    if (!txt || selectedRating === 0) { showToast('Isi ulasan dan pilih rating dulu'); return; }
+    showToast('Mengirim ulasan...');
+
+    const reviewData = {
+        user_id: currentUser.id,
+        username: currentUser.username,
+        avatar: '#C4785A',
+        skin_type: st,
+        issues: issues,
+        product_id: parseInt(pid),
+        product_name: p ? p.name : '',
+        rating: selectedRating,
+        review_text: txt,
+        photo_url: currentReviewPhotoBase64 || null
+    };
+
+    const r = await apiCall('add_review', 'POST', reviewData);
+    if (r.success) {
+        showToast('Ulasan berhasil dikirim! 💖');
+        closeReviewModal();
+        loadReviews('all');
+    } else {
+        showToast('Gagal mengirim ulasan');
+    }
+}
+
+async function loadStats() {
+    const u = await apiCall('total_users', 'GET');
+    if (u.success) document.getElementById('stat-users').textContent = u.total_users;
+    const r = await apiCall('reviews', 'GET');
+    if (r.success) document.getElementById('stat-reviews').textContent = r.reviews.length;
+}
+
+function closeQuizModal() { document.getElementById('quiz-modal').classList.remove('open'); }
+function closeProblemModal() { document.getElementById('problem-modal').classList.remove('open'); }
+function closeReviewModal() { document.getElementById('review-modal').classList.remove('open'); }
+
+function showToast(m) {
+    const t = document.getElementById('toast');
+    t.textContent = m;
+    t.style.display = 'block';
+    clearTimeout(t._timeout);
+    t._timeout = setTimeout(() => t.style.display = 'none', 3000);
+}
+
+// ========== DROPDOWN INTERACTION & OVERRIDES ==========
+function toggleDropdown(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('show');
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown-menu').forEach(m => m.classList.remove('show'));
+    }
+});
+
+function openTabFromDropdown(tab) {
+    showTab(tab);
+
+    document.querySelectorAll('.nav-dropdown-menu').forEach(d => {
+        d.classList.remove('show');
+    });
+
+    document.querySelectorAll('.nav-link, .nav-dropdown-btn').forEach(l => l.classList.remove('active'));
+    const recBtn = document.querySelector('.nav-dropdown-btn');
+    if (recBtn) recBtn.classList.add('active');
+
+    // Memicu alur popup dan filter 3 cabang khusus jika halaman produk dibuka
+    if (tab === 'products') {
+        adaNotifRekomendasi = false;
+        const badge = document.getElementById('rec-notif-badge');
+        if (badge) badge.style.display = 'none';
+
+        const alertModal = document.getElementById('rec-alert-modal');
+        const alertText = document.getElementById('rec-alert-skin-text');
+        if (alertModal) {
+            if (alertText) alertText.textContent = userSkinType || 'Kulitmu';
+            alertModal.classList.add('open');
+        }
+        filterSkincareTigaCabang();
+    }
+}
+
+// ========== INIT LOAD ==========
+window.onload = async () => {
+    const saved = localStorage.getItem('ks_current');
+    if (saved) {
+        currentUser = JSON.parse(saved);
+        await loadUserData();
+        enterApp();
+    }
+};
+</script>
+
+<!-- ========== POPUP NOTIFIKASI REKOMENDASI SKINCARE AI ========== -->
+<div class="modal-overlay" id="rec-alert-modal">
+    <div class="modal" style="max-width: 420px; padding: 2rem; border-radius: 24px; text-align: center; background: white;">
+        <div class="modal-header" style="margin-bottom: 0.5rem; display: flex; justify-content: flex-end;">
+            <button class="modal-close" onclick="document.getElementById('rec-alert-modal').classList.remove('open')">✕</button>
+        </div>
+        <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">✨</div>
+        <h4 style="font-family:'Poppins'; font-weight:600; font-size:1.05rem; margin-bottom: 0.5rem; color:#3E2723;">Rekomendasi Produk Siap!</h4>
+        <p style="color: #8B8B87; font-size: 0.8rem; line-height:1.6; margin-bottom: 1.5rem;">
+            Sistem berhasil memfilter produk and ulasan komunitas yang paling cocok untuk jenis <b id="rec-alert-skin-text" style="color:#5D4037;">Kulitmu</b>.
+        </p>
+        <button class="btn-primary" style="width: 100%; background: #5D4037; padding: 10px; border-radius: 20px; font-size: 0.85rem;" onclick="closeRecAlertAndFilter()">
+            Lihat Skincare Sesuai Kulit Saya →
+        </button>
+    </div>
+</div>
+
+</body>
+</html>
