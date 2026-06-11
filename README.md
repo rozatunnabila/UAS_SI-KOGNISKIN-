@@ -3,6 +3,13 @@ Anggota Kelompok:
 2. Kania
 3. Rozatun Nabila = 2408107010010
 
+## Catatan
+
+Mohon maaf sebelumnya Bu,
+Awalnya kami berencana melakukan hosting aplikasi agar dapat diakses secara online. Namun, karena fitur scan wajah pada COGNISKIN menggunakan library TensorFlow dan Scipy, website memerlukan layanan hosting yang mendukung environment Python.
+Kami telah mencoba melakukan hosting menggunakan Render, tetapi mengalami kendala berupa error pada layanan tersebut sehingga website tidak berhasil di-hosting hingga batas waktu pengumpulan.
+Karena kendala tersebut, pengumpulan proyek kami menjadi sedikit terlambat. 
+
 # COGNISKIN
 
 ## Sistem Analisis Kondisi Kulit dan Rekomendasi Skincare
