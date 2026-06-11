@@ -131,7 +131,3 @@ http://localhost/kogniskin
 ```
 
 ---
-
-## Preview
-
-COGNISKIN membantu pengguna mengenali kondisi kulit, memahami kandungan skincare, serta memperoleh rekomendasi produk yang lebih personal berdasarkan hasil analisis wajah.
